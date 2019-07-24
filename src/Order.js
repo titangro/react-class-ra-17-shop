@@ -12,7 +12,8 @@ class Order extends Component {
     this.state = {
       products: [],
       cart: [],
-      error: ''
+      error: '',
+      isActiveForm: false
     }
   }
   
@@ -71,8 +72,11 @@ class Order extends Component {
         this.setState({error: 'Адрес должен содержать не менее 15 симфолов'});
       return false;
     }
-    if (this.state.error === '')
-      this.setState({error: ''})
+    if (this.state.error !== '') {
+      this.setState({error: '', isActiveForm: true});
+    } else {
+      this.setState({isActiveForm: true});
+    }
     return true;
   }
 
@@ -81,24 +85,31 @@ class Order extends Component {
 
     const formData = new FormData(event.target);
 
-    console.log(this.validateForm(formData));
+    if (this.validateForm(formData)) {
+      console.log('Успешный заказ')
+    } else {
+      console.log('Ошибки при валидации формы')
+    }
   }
 
   /* Убираем недопустимые символы для ввода */
   checkName(node) {
     node.value = node.value.replace(/[^a-zA-ZА-Яа-яЁё]/gi,'');
+    this.validateForm(new FormData(node.parentElement.parentElement.parentElement.parentElement), false);
   }
 
   checkPhone(node) {
-    node.value = node.value.replace(/[a-zA-ZА-Яа-яЁё!@#$%^&*\\|/`~_\[\]{}]/gi,'');
+    node.value = node.value.replace(/[a-zA-ZА-Яа-яЁё!@#$%^&*\\|/`~_\[\]{}.<>?,]/gi,'');
+    this.validateForm(new FormData(node.parentElement.parentElement.parentElement.parentElement), false);
   }
 
   checkDelivery(node) {
-    node.value = node.value.replace(/[!@#$%^&*\\|/`~_\[\]{}]/gi,'');
+    node.value = node.value.replace(/[!@#$%^&*\\|/`~_\[\]{}<>?]/gi,'');
+    this.validateForm(new FormData(node.parentElement.parentElement.parentElement.parentElement), false);
   }
 
   checkEmail(node) {
-    
+    this.validateForm(new FormData(node.parentElement.parentElement.parentElement.parentElement), false);
   }
 
   render() {
@@ -204,7 +215,7 @@ class Order extends Component {
                   </label>
                 </div>
               </div>
-              <button className="order-process__form-submit order-process__form-submit_click">Подтвердить заказ</button>
+              <button className={`order-process__form-submit order-process__form-submit_click${!this.state.isActiveForm ? ' order-process__form-submit_disabled' : ''}`}>Подтвердить заказ</button>
             </form>
           </div>
         </section>
