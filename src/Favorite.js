@@ -37,7 +37,7 @@ class Favorite extends Component {
     //console.log(this.props)
     return this.state.favorite.length ? (
       <React.Fragment>
-        <Breadcrumbs {...this.props} categoryName={'Избранное'} />    
+        <Breadcrumbs {...this.props} categoryName={'Избранное'} />
         <main className="product-catalogue product-catalogue_favorite">          
           <section className="product-catalogue__head product-catalogue__head_favorite">
             <div className="product-catalogue__section-title">

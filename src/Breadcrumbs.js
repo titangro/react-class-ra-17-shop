@@ -8,7 +8,7 @@ const Breadcrumbs = ({categoryId, categoryName, handleFilter, getSearchParam, pr
     let categoryLink;
     if (categoryId) {
         categoryLink = `/catalog?categoryId=${categoryId}`;
-        links.push({name: categoryName, link: categoryLink});        
+        links.push({name: categoryName, link: categoryLink});
     }
 
     /* Карточка товаров */
@@ -24,13 +24,18 @@ const Breadcrumbs = ({categoryId, categoryName, handleFilter, getSearchParam, pr
         links.push({name: categoryName, link: '/catalog'});
     }
 
+    /* Результаты поиска */
+    if (categoryName === 'Результаты поиска') {
+        links.push({name: categoryName, link: `/catalog?search=${getSearchParam('search')}`});
+    }
+
     /* Избранное */
     if (categoryName === 'Избранное') {
         links.push({name: categoryName, link: '/favorite'});
     }
 
     /* Офомление заказа */
-    if (categoryName === 'Офомление заказа') {
+    if (categoryName === 'Оформление заказа') {
         links.push({name: categoryName, link: '/order'});
     }
     

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import productImg from './img/product-list__pic_1.jpg';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -29,15 +28,11 @@ class Cart extends Component {
         }
     }
 
-    deleteGoodFromCart(productId, size) {
-        this.props.addCart(productId, size, 0)
-            .then(res => {
-                if (res.status === 'ok') {
-                    this.props.fetchCart(res.data.id);
-                } else {
-                    console.log(res.message);
-                }
-            })
+    handleOrder() {
+        const basketMenu = document.querySelector('.header-main__pic_basket_menu');
+        const panel = document.querySelector('.header-main__hidden-panel');
+        basketMenu.classList.remove('header-main__pic_basket_menu_is-active');
+        panel.classList.remove('header-main__hidden-panel_visible');
     }
 
     render() {
@@ -68,7 +63,7 @@ class Cart extends Component {
                                         {(product.amount * good.price).toLocaleString('RU-ru')}
                                         <i className="fa fa-rub" aria-hidden="true"></i>
                                     </div>
-                                    <div className="product-list__delete" onClick={() => this.deleteGoodFromCart(product.id, product.size)}>
+                                    <div className="product-list__delete" onClick={() => this.props.deleteGoodFromCart(product.id, product.size)}>
                                         <i className="fa fa-times" aria-hidden="true"></i>
                                     </div>
                                 </div>
@@ -76,7 +71,7 @@ class Cart extends Component {
                         }
                     )}
                 </div>
-                <Link className="basket-dropped__order-button" to="/order">Оформить заказ</Link>
+                <Link className="basket-dropped__order-button" to="/order" onClick={() => this.handleOrder()}>Оформить заказ</Link>
             </React.Fragment>
         ) : <div className="basket-dropped__title" style={{fontWeight: 'normal'}}>В корзине пока ничего нет. Не знаете, с чего начать? Посмотрите наши <Link to="/" style={{color: '#fff'}}>новинки</Link>!</div>
     }
@@ -89,8 +84,7 @@ Cart.propTypes = {
     showFilter: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     getSearchParam: PropTypes.func.isRequired,
-    addCart: PropTypes.func.isRequired,
-    fetchCart: PropTypes.func.isRequired,
+    deleteGoodFromCart: PropTypes.func.isRequired,
     cart: PropTypes.array.isRequired
 }        
 

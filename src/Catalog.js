@@ -64,7 +64,9 @@ class Catalog extends Component {
     //console.log(this.state);
     const curCategory = this.props.categories.filter(cat => cat.id === this.state.categoryId);
     let categoryName;
-    if (this.props.categories.length) {      
+    if (this.props.getSearchParam('search')) {
+      categoryName = 'Результаты поиска'
+    } else if (this.props.categories.length) {      
       categoryName = curCategory.length ? curCategory[0].title : 'Каталог';
     }
     //console.log(this.state.categoryId, categoryName);
