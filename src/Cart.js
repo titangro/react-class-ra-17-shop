@@ -9,7 +9,8 @@ class Cart extends Component {
         super(props);
         
         this.state = {
-            products: []
+            products: [],
+            cart: this.props.cart
         }
     }
 
@@ -23,68 +24,57 @@ class Cart extends Component {
             )
                 .then(res => Array.from(res).map(item => item.data))
                 .then(res => {
-                    this.setState({products: res})
+                    this.setState({products: res, cart: nextProps.cart})
                 })
         }
     }
 
+    deleteGoodFromCart(productId, size) {
+        this.props.addCart(productId, size, 0)
+            .then(res => {
+                if (res.status === 'ok') {
+                    this.props.fetchCart(res.data.id);
+                } else {
+                    console.log(res.message);
+                }
+            })
+    }
+
     render() {
-        //console.log(this.state)
-        return this.props.cart.length ? (
+        return this.state.products.length ? (
             <React.Fragment>
                 <div className="basket-dropped__title">В вашей корзине:</div>
                 <div className="basket-dropped__product-list product-list">
-                    <div className="product-list__item">
-                        <a className="product-list__pic">
-                            <img src={productImg} alt="product" />
-                        </a>
-                        <a href="#" className="product-list__product">Ботинки женские, Baldinini</a>
-                        <div className="product-list__fill"></div>
-                        <div className="product-list__price">12 360
-                        <i className="fa fa-rub" aria-hidden="true"></i>
-                        </div>
-                        <div className="product-list__delete">
-                        <i className="fa fa-times" aria-hidden="true"></i>
-                        </div>
-                    </div>    
-                    <div className="product-list__item">
-                        <a className="product-list__pic">
-                            <img src={productImg} alt="product" />
-                        </a>
-                        <a href="#" className="product-list__product">Ботинки женские, Baldinini</a>
-                        <div className="product-list__fill"></div>
-                        <div className="product-list__price">12 360
-                            <i className="fa fa-rub" aria-hidden="true"></i>
-                        </div>
-                        <div className="product-list__delete">
-                            <i className="fa fa-times" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                    <div className="product-list__item">
-                        <a className="product-list__pic">
-                            <img src={productImg} alt="product" />
-                        </a>
-                        <a href="#" className="product-list__product">Ботинки женские, Baldinini</a>
-                        <div className="product-list__fill"></div>
-                        <div className="product-list__price">12 360
-                        <i className="fa fa-rub" aria-hidden="true"></i>
-                        </div>
-                        <div className="product-list__delete">
-                        <i className="fa fa-times" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                    <div className="product-list__item">
-                        <a className="product-list__pic">
-                        <img src={productImg} alt="product" /> </a>
-                        <a href="#" className="product-list__product">Ботинки женские, Baldinini</a>
-                        <div className="product-list__fill"></div>
-                        <div className="product-list__price">12 360
-                        <i className="fa fa-rub" aria-hidden="true"></i>
-                        </div>
-                        <div className="product-list__delete">
-                        <i className="fa fa-times" aria-hidden="true"></i>
-                        </div>
-                    </div>    
+                    {this.state.cart.map(
+                        product => {
+                            const good = this.state.products.filter(item => item.id === product.id)[0];
+                            return (                            
+                                <div className="product-list__item" key={product.id + '_' + product.size}>
+                                    <Link className="product-list__pic" 
+                                        to={`/product_card/${product.id}`} 
+                                        alt={good.title}
+                                        style={{
+                                            backgroundImage: `url(${good.images[0]})`,
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize: 'contain',
+                                            backgroundPosition: 'center'
+                                        }}>
+                                    </Link>
+                                    <Link href="#" className="product-list__product" to={`/product_card/${product.id}`}>
+                                        {good.title}
+                                    </Link>
+                                    <div className="product-list__fill"></div>
+                                    <div className="product-list__price">
+                                        {(product.amount * good.price).toLocaleString('RU-ru')}
+                                        <i className="fa fa-rub" aria-hidden="true"></i>
+                                    </div>
+                                    <div className="product-list__delete" onClick={() => this.deleteGoodFromCart(product.id, product.size)}>
+                                        <i className="fa fa-times" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            )
+                        }
+                    )}
                 </div>
                 <Link className="basket-dropped__order-button" to="/order">Оформить заказ</Link>
             </React.Fragment>
@@ -98,7 +88,10 @@ Cart.propTypes = {
     handleFilter: PropTypes.func.isRequired,
     showFilter: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    getSearchParam: PropTypes.func.isRequired
+    getSearchParam: PropTypes.func.isRequired,
+    addCart: PropTypes.func.isRequired,
+    fetchCart: PropTypes.func.isRequired,
+    cart: PropTypes.array.isRequired
 }        
 
 export default Cart;

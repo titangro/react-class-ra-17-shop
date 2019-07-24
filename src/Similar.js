@@ -53,9 +53,11 @@ class Similar extends Component {
                             <div className="similar-products-slider__item">
                                 <Link to={`/product_card/${product.id}`} onClick={() => this.props.fetchProduct ? this.props.fetchProduct(product.id) : ''} style={{
                                     backgroundImage: `url(${product.images[0]})`,
-                                    backgroundSize: 'auto 99%',
+                                    backgroundSize: 'contain',
                                     backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat'
+                                    backgroundRepeat: 'no-repeat',
+                                    height: '99%',
+                                    width: '99%'
                                     }} alt={product.title} >
                                 </Link>
                             </div>

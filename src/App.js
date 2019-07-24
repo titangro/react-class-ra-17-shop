@@ -229,7 +229,7 @@ class App extends Component {
   }
 
   addCart(id, size, amount) {
-    if (!id || !size || !amount)
+    if (id === 'undefined' || size === 'undefined' || amount === 'undefined')
       return console.log(`Не указан один из обязательный параметров. id:${id}, size:${size}, amount:${amount}`);
     return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${localStorage.cart && localStorage.cart !== 'undefined' ? localStorage.cart : ''}`,{
       method: 'POST',
@@ -370,7 +370,7 @@ class App extends Component {
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <div className="container" >
           <Preloader hidden={!this.state.isLoading} />
-          <Header {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} handleFilter={this.handleFilter.bind(this)} fetchActiveSubcategories={this.fetchActiveSubcategories.bind(this)} showFilter={this.showFilter.bind(this)} history={history} getSearchParam={this.getSearchParam.bind(this)} />                         
+          <Header {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} handleFilter={this.handleFilter.bind(this)} fetchActiveSubcategories={this.fetchActiveSubcategories.bind(this)} showFilter={this.showFilter.bind(this)} history={history} getSearchParam={this.getSearchParam.bind(this)} addCart={this.addCart.bind(this)} fetchCart={this.fetchCart.bind(this)} />                         
           <Switch>
             <Route exact path="/">
               <Homepage {...this.state} handleFavorite={this.handleFavorite} />

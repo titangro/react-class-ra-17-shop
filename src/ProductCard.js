@@ -92,7 +92,7 @@ class ProductCard extends Component {
     }
     const blickBlock = () => {
       basketIcon.style.display = 'block';
-      let none = setTimeout(() => hiddenBlock(), 300);
+      setTimeout(() => hiddenBlock(), 300);
       if (tic === 4) {
         clearInterval(block);
         basketIcon.style.display = 'block';
