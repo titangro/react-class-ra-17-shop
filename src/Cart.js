@@ -55,8 +55,8 @@ class Cart extends Component {
                                             backgroundPosition: 'center'
                                         }}>
                                     </Link>
-                                    <Link href="#" className="product-list__product" to={`/product_card/${product.id}`}>
-                                        {good.title}
+                                    <Link className="product-list__product" to={`/product_card/${product.id}`}>
+                                        {`${good.title} (размер: ${product.size})${product.amount > 1 ? `, ${product.amount} шт` : ''}`}
                                     </Link>
                                     <div className="product-list__fill"></div>
                                     <div className="product-list__price">
