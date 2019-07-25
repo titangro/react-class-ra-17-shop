@@ -86,13 +86,13 @@ class Order extends Component {
     const formData = new FormData(event.target);
 
     if (this.validateForm(formData)) {
-      console.log('Успешный заказ')
+      console.log('Успешный заказ');
     } else {
-      console.log('Ошибки при валидации формы')
+      console.log('Ошибки при валидации формы');
     }
   }
 
-  /* Убираем недопустимые символы для ввода */
+  /* Убираем недопустимые символы для ввода, валидация формы при наборе для активации кнопки подтверждения заказа */
   checkName(node) {
     node.value = node.value.replace(/[^a-zA-ZА-Яа-яЁё]/gi,'');
     this.validateForm(new FormData(node.parentElement.parentElement.parentElement.parentElement), false);
@@ -110,6 +110,20 @@ class Order extends Component {
 
   checkEmail(node) {
     this.validateForm(new FormData(node.parentElement.parentElement.parentElement.parentElement), false);
+  }
+
+  /* Изменение количества данного товара на лету */
+  handleQuantity(productId, size, newAmount) {
+    if (newAmount === 0)
+      return false;
+    this.props.addCart(productId, size, newAmount)
+      .then(res => {
+        if (res.status === 'ok') {
+          this.props.fetchCart(res.data.id);
+        } else {
+          this.setState({error: res.message })
+        }
+      })
   }
 
   render() {
@@ -151,9 +165,11 @@ class Order extends Component {
                           </div>
                         </div>
                         <div className="basket-item__quantity">
-                          <div className="basket-item__quantity-change basket-item-list__quantity-change_minus">-</div>
+                          <div className="basket-item__quantity-change basket-item-list__quantity-change_minus" 
+                            onClick={() => this.handleQuantity(product.id, product.size, product.amount - 1)}>-</div>
                           {product.amount}
-                          <div className="basket-item__quantity-change basket-item-list__quantity-change_plus">+</div>
+                          <div className="basket-item__quantity-change basket-item-list__quantity-change_plus" 
+                            onClick={() => this.handleQuantity(product.id, product.size, product.amount + 1)}>+</div>
                         </div>
                         <div className="basket-item__price">
                           {(product.amount * good.price).toLocaleString('RU-ru')}
@@ -226,7 +242,9 @@ class Order extends Component {
 
 Order.propTypes = {
   fetchSingleProduct: PropTypes.func.isRequired,
-  cart: PropTypes.array.isRequired
+  cart: PropTypes.array.isRequired,
+  addCart: PropTypes.func.isRequired,
+  fetchCart: PropTypes.func.isRequired
 }
 
 export default Order;

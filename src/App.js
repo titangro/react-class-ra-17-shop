@@ -390,7 +390,7 @@ class App extends Component {
               <Catalog {...this.state} history={history} getSearchParam={this.getSearchParam} handleFilter={this.handleFilter.bind(this)} handleFavorite={this.handleFavorite} fetchProductsByParams={this.fetchProductsByParams.bind(this)} fetchSizes={this.fetchSizes.bind(this)} showFilter={this.showFilter.bind(this)} />
             </Route> : ''}
             <Route path="/order">
-              <OrderWithWrapper {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} />
+              <OrderWithWrapper {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} addCart={this.addCart.bind(this)} fetchCart={this.fetchCart.bind(this)} />
             </Route>
             <Route path="/product_card/:id">
               <ProductCard {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} addCart={this.addCart.bind(this)} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFilter={this.handleFilter.bind(this)} handleFavorite={this.handleFavorite} addViewed={this.addViewed} fetchCart={this.fetchCart.bind(this)} />
