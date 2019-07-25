@@ -2,19 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const OrderDone = ({formData, sumOrder}) => {
-  /* Получение данных из формы */
-  const name = formData.get('name');
-  const phone = formData.get('phone');
-  const email = formData.get('email');
-  const delivery = formData.get('delivery');
-  const paid = formData.get('paid');
-
+const OrderDone = ({order, email, sumOrder}) => {
   /* Расшифровка для ключа оплаты */
   const paidObj = {
-    'card-online': 'Картой онлайн',
-    'card-courier': 'Картой курьеру',
-    'cash': 'Наличными курьеру'
+    'onlineCard': 'Картой онлайн',
+    'offlineCard': 'Картой курьеру',
+    'offlineCash': 'Наличными курьеру'
   }
 
   const relocateToCatalog = () => window.location.pathname = '/catalog';
@@ -29,19 +22,19 @@ const OrderDone = ({formData, sumOrder}) => {
         </div>
         <div className="order-info__item order-info__item_pay-form"> 
           <h3>Способ оплаты:</h3>
-          <p>{paidObj[paid]}</p>
+          <p>{paidObj[order.paymentType]}</p>
         </div>
         <div className="order-info__item order-info__item_customer-name"> 
           <h3>Имя клиента:</h3>
-          <p>{name}</p>
+          <p>{order.name}</p>
         </div>
         <div className="order-info__item order-info__item_adress">
           <h3>Адрес доставки:</h3>
-          <p>{delivery}</p>
+          <p>{order.address}</p>
         </div>
         <div className="order-info__item order-info__item_phone">
           <h3>Телефон:</h3>
-          <p>{phone}</p>
+          <p>{order.phone}</p>
         </div>
       </div>
       <p className="order-done__notice">Данные о заказе отправлены на адрес <span>{email}.  </span></p>
@@ -51,8 +44,15 @@ const OrderDone = ({formData, sumOrder}) => {
 }
 
 OrderDone.propTypes = {
-  formData: PropTypes.object.isRequired,
+  order: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    phone: PropTypes.any.isRequired,
+    address: PropTypes.string.isRequired,
+    paymentType: PropTypes.string.isRequired,
+    cart: PropTypes.string.isRequired,
+  }),
   sumOrder: PropTypes.number.isRequired,
+  email: PropTypes.string.isRequired
 }
 
 export default OrderDone;

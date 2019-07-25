@@ -79,7 +79,7 @@ const OrderProrgess = ({validateForm, sumOrder, handleQuantity, cart, products, 
             </div>
           </div>
           <div className="order-process__confirmed">
-            <form action="" onSubmit={(event) => sendForm(event)}>
+            <form action="" onSubmit={(event) => sendForm(event, sumOrder)}>
               <div className="order-process__delivery">
                 <h3 className="h3">кому и куда доставить?</h3>
                 <div className="order-process__delivery-form">

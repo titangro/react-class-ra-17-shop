@@ -22,6 +22,7 @@ class App extends Component {
       activeFilter: window.location.search,
       featured: [],
       cart: [],
+      order: null,
       isLoading: true,
       errors: [],
     }
@@ -84,9 +85,6 @@ class App extends Component {
         if (errors.length)
           this.setState({isLoading: false, errors: [...this.state.errors, ...errors] })
       })
-
-    /* загрузка новинок 
-    ;*/
   }
 
   fetchProducts() {
@@ -211,7 +209,7 @@ class App extends Component {
       })
   }
 
-  fetchOrder(cartId, formData) {
+  fetchOrder(cartId, formData, sumOrder) {
     const paidObj = {
       'card-online': 'onlineCard',
       'card-courier': 'offlineCard',
@@ -236,7 +234,8 @@ class App extends Component {
       .then(res => res.json())
       .then(res => {
         if (res.status === 'ok') {
-          return res.data;
+          this.setState({cart: [], order: {data: res.data, email: formData.get('email'), sumOrder: sumOrder}});
+          localStorage.cart = '';
         } else {
           console.log(res.message);
         }     

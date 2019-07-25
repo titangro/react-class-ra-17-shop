@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Breadcrumbs from './Breadcrumbs';
 import OrderProgress from './OrderProgress';
@@ -16,27 +15,30 @@ class Order extends Component {
       cart: [],
       error: '',
       isActiveForm: false,
-      formData: null,
-      sumOrder: 0
+      sumOrder: 0,
     }
   }
   
   componentWillMount() {
     this._isMounted = true;
-    
     if (this.props.cart.length !== this.state.cart.length) {
       this.updateCartProducts(this.props);
     }
+
+    if (this.props.categories.length && !this.props.order && !this.props.cart.length)
+      window.location.pathname = '/';
   }
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.cart.length && this.props.cart.reduce((sum,{amount}) => sum + amount,0) !== nextProps.cart.reduce((sum,{amount}) => sum + amount,0))
       this.updateCartProducts(nextProps);
+
+    if (!nextProps.cart.length && !nextProps.order)
+      window.location.pathname = '/';
   }
   
   componentWillUnmount() {
     this._isMounted = false;
-    this.setState({formData: null})
   }
 
   updateCartProducts(props) {
@@ -90,16 +92,18 @@ class Order extends Component {
   }
 
   /* Отправка письма при успешной валидации, переключение на успешное оформление заказа, удаление корзины */
-  sendForm = (event) => {
+  sendForm = (event, sumOrder) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
 
     if (this.validateForm(formData)) {
-      this.setState({formData: formData});
-      window.scrollTo(0, 300);
+      this.props.fetchOrder(localStorage.cart, formData, sumOrder)
+        .then(() => {
+          window.scrollTo(0, 300);
+        });
     } else {
-        console.log('Ошибки при валидации формы');
+      console.log('Ошибки при валидации формы');
     }
 }
 
@@ -118,16 +122,17 @@ class Order extends Component {
   } 
 
   render() {
-    console.log(this.state.sumOrder)
-    return this.state.sumOrder ? (
+    return this.state.sumOrder || this.props.order ? (
       <React.Fragment>
         <Breadcrumbs {...this.props} categoryName={'Оформление заказа'} />
-        {!this.state.formData ?
+        {!this.props.order ?
           <OrderProgress {...this.state} validateForm={this.validateForm.bind(this)} handleQuantity={this.handleQuantity.bind(this)} sendForm={this.sendForm.bind(this)} />
-          : <OrderDone formData={this.state.formData} sumOrder={this.state.sumOrder} />
+          : <OrderDone order={this.props.order.data.info} email={this.props.order.email} sumOrder={this.props.order.sumOrder} />
         }        
       </React.Fragment>
-    ) : 'Идет загрузка корзины'
+    ) : <div>
+          <p>Ваша корзина пуста</p>
+        </div>
   }
 }
 
