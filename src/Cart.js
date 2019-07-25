@@ -82,7 +82,6 @@ Cart.propTypes = {
     categories: PropTypes.array.isRequired,
     handleFilter: PropTypes.func.isRequired,
     showFilter: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
     getSearchParam: PropTypes.func.isRequired,
     deleteGoodFromCart: PropTypes.func.isRequired,
     cart: PropTypes.array.isRequired
