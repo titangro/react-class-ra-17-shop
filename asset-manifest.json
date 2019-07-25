@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/ra-17/static/css/main.8ee91880.chunk.css",
+    "main.js": "/ra-17/static/js/main.2a39913e.chunk.js",
+    "main.js.map": "/ra-17/static/js/main.2a39913e.chunk.js.map",
+    "runtime~main.js": "/ra-17/static/js/runtime~main.00338b18.js",
+    "runtime~main.js.map": "/ra-17/static/js/runtime~main.00338b18.js.map",
+    "static/js/2.188498c9.chunk.js": "/ra-17/static/js/2.188498c9.chunk.js",
+    "static/js/2.188498c9.chunk.js.map": "/ra-17/static/js/2.188498c9.chunk.js.map",
+    "index.html": "/ra-17/index.html",
+    "precache-manifest.536dca85b2d349641828eebfe1396418.js": "/ra-17/precache-manifest.536dca85b2d349641828eebfe1396418.js",
+    "service-worker.js": "/ra-17/service-worker.js",
+    "static/css/main.8ee91880.chunk.css.map": "/ra-17/static/css/main.8ee91880.chunk.css.map",
+    "static/media/font-awesome.min.css": "/ra-17/static/media/fontawesome-webfont.fee66e71.woff",
+    "static/media/style.css": "/ra-17/static/media/sales-and-news__item_4.b11b7687.jpg",
+    "static/media/style-product-card.css": "/ra-17/static/media/product-card__favourite-product-slider-item-3.2a1868ad.png",
+    "static/media/style-catalogue.css": "/ra-17/static/media/product-catalogue__overlooked-slider-item-5.350013cd.png",
+    "static/media/slider.jpg": "/ra-17/static/media/slider.d613d452.jpg",
+    "static/media/slider180deg.jpeg": "/ra-17/static/media/slider180deg.54638011.jpeg"
+  }
+}
