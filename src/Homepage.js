@@ -43,7 +43,8 @@ class Homepage extends Component {
             </div>
           </div>
         </section>
-        <Newdeals {...this.props} />
+        {!this.props.isLoading ?
+          <Newdeals {...this.props} /> : ''}
         <section className="sales-and-news wave-bottom">
           <h2 className="h2">акции и новости</h2>
           <div className="sales-and-news__items">

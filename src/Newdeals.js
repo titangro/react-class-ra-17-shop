@@ -7,100 +7,104 @@ class Newdeals extends Component {
         super(props);
 
         this.state = {
-            featuredId: null,
-            featurePos: 0
+            categoryId: null,
+            featured: this.props.featured,
+            featurePos: 0,
+            favoriteCls: this.getFavoriteCls()
         }
     }
 
     handleSlider(pos) {
-        this.setState({featurePos: pos});
+        this.setState({
+            featurePos: pos,
+            favoriteCls: this.getFavoriteCls(pos)
+        });
     }
     
-    changeFirstPos(pos, length) {
+    showPrevGoodPos(pos, length) {
         return pos - 1 === -1 || (pos > length - 1) ? length - 1 : pos - 1;
     }
 
-    changeNextPos(pos, length) {
+    showNextGoodPos(pos, length) {
         return pos + 1 === length || (pos > length - 1) ? 0 : pos + 1;
     }
 
-    getFavoriteCls(localStarogeFavorite, featured) {
-        return localStarogeFavorite ? 
-            (JSON.parse(localStarogeFavorite).includes(featured[this.state.featurePos].id) ? 'new-deals__product_favorite-chosen' : 'new-deals__product_favorite')
-            : 'new-deals__product_favorite';
+    getFavoriteCls(pos) {
+        if (localStorage.favorite) {
+            if (JSON.parse(localStorage.favorite).includes(this.state ? this.state.featured[pos !== undefined ? pos : this.state.featurePos].id : this.props.featured[0].id)) {                
+                return 'new-deals__product_favorite-chosen';
+            }
+        }
+        return 'new-deals__product_favorite';
+    }
+
+    handleCategory(event, categoryId = 0) {
+        event.preventDefault();        
+        if  (categoryId) {
+            this.setState({featured: this.props.featured.filter(feature => feature.categoryId === categoryId), featurePos: 0, categoryId: categoryId});
+        } else
+            this.setState({featured: this.props.featured, featurePos: 0, categoryId: null});
+    }
+
+    handleFavorite(id) {
+        this.props.handleFavorite(id);
+        this.setState({
+            favoriteCls: this.getFavoriteCls()
+        });
     }
 
     render() {
-        const categories = this.props.categories.filter(category => this.props.featured.map(feature => feature.categoryId).includes(category.id));
-        const featured = this.state.featuredId ? this.props.featured.filter(feature => feature.categoryId == this.state.featuredId) : this.props.featured;        
+        const activeCategories = this.props.categories.filter(cat => this.props.featured.find(item => item.categoryId === cat.id));
+        const firstGood = this.state.featured[this.showPrevGoodPos(this.state.featurePos, this.state.featured.length)];
+        const nextGood = this.state.featured[this.showNextGoodPos(this.state.featurePos, this.state.featured.length)];
+        const activeGood = this.state.featured[this.state.featurePos];
         
-        const firstPos = this.changeFirstPos(this.state.featurePos, featured.length);
-        const nextPos = this.changeNextPos(this.state.featurePos, featured.length);
-        //console.log(featured.length, this.state.featurePos, (this.state.featurePos - 1 === -1 || (this.state.featurePos > featured.length - 1)), firstPos, nextPos);
-        return !featured.length ?
-        ( 
+        return (
             <section className="new-deals wave-bottom">
                 <h2 className="h2">Новинки</h2>
                 <div className="new-deals__menu">
                     <ul className="new-deals__menu-items">
-                        {categories.map(({title, id}) =>
-                        <li key={id} className={`new-deals__menu-item ${this.state.featuredId === id ? 'new-deals__menu-item_active' : ''}`}>
-                            <a onClick={(event) => {event.preventDefault(); this.setState({featuredId: id}); this.setState({featurePos: 0});} }>{title}</a>
-                        </li>
-                        )}
-                    </ul>
-                </div>
-            </section>
-        )
-        : (
-            <section className="new-deals wave-bottom">
-                <h2 className="h2">Новинки</h2>
-                <div className="new-deals__menu">
-                    <ul className="new-deals__menu-items">
-                        {categories.map(({title, id}) =>
-                        <li key={id} className={`new-deals__menu-item ${this.state.featuredId === id ? 'new-deals__menu-item_active' : ''}`}>
-                            <a onClick={(event) => {event.preventDefault(); this.setState({featuredId: id}); this.setState({featurePos: 0});} }>{title}</a>
+                        {activeCategories.map(({title, id}) =>
+                        <li key={id} className={`new-deals__menu-item ${this.state.categoryId === id ? 'new-deals__menu-item_active' : ''}`}>
+                            <a onClick={(event) => this.handleCategory(event, id) }>{title}</a>
                         </li>
                         )}
                     </ul>
                 </div>
                 <div className="new-deals__slider">
-                    <div className="new-deals__arrow new-deals__arrow_left arrow" onClick={() => this.handleSlider(firstPos)}></div>
+                    <div className="new-deals__arrow new-deals__arrow_left arrow" onClick={() => this.handleSlider(this.showPrevGoodPos(this.state.featurePos, this.state.featured.length))}></div>
                     <div className="new-deals__product new-deals__product_first" 
                         style={{
-                            backgroundImage: `url(${featured.length ? featured[firstPos].images[0] : ''})`, 
+                            backgroundImage: `url(${firstGood.images[0]})`, 
                             backgroundSize: 'contain'
                         }}>
-                        <Link to={`/product_card/${featured[firstPos].id}`}></Link>
+                        <Link to={`/product_card/${firstGood.id}`}></Link>
                     </div>
                     <div className="new-deals__product new-deals__product_active" 
                         style={{
-                            backgroundImage: `url(${featured.length ? featured[this.state.featurePos].images[0] : ''})`, 
+                            backgroundImage: `url(${activeGood.images[0]})`, 
                             backgroundSize: 'contain'
                         }}>
-                        <Link to={`/product_card/${featured[this.state.featurePos].id}`}></Link>
-                        <div className={this.getFavoriteCls(localStorage.favorite, featured)}
-                            onClick={(event) => {
-                                this.props.handleFavorite(featured[this.state.featurePos].id);
-                                event.target.classList = [this.getFavoriteCls(localStorage.favorite, featured)];
-                            }}
+                        <Link to={`/product_card/${activeGood.id}`}></Link>
+                        <div className={this.state.favoriteCls}
+                            onClick={() => this.handleFavorite(activeGood.id)}
                             ></div>
                     </div>
                     <div className="new-deals__product new-deals__product_last" 
                         style={{
-                            backgroundImage: `url(${featured.length ? featured[nextPos].images[0] : ''})`, 
+                            backgroundImage: `url(${nextGood.images[0]})`, 
                             backgroundSize: 'contain'
                         }}>
-                        <Link to={`/product_card/${featured[nextPos].id}`}></Link>
+                        <Link to={`/product_card/${nextGood.id}`}></Link>
                     </div>
-                    <div className="new-deals__arrow new-deals__arrow_right arrow" onClick={() => this.handleSlider(nextPos)}></div>
+                    <div className="new-deals__arrow new-deals__arrow_right arrow" onClick={() => this.handleSlider(this.showNextGoodPos(this.state.featurePos, this.state.featured.length))}></div>
                 </div>
                 <div className="new-deals__product-info">
-                    <Link to={`/product_card/${featured[this.state.featurePos].id}`} className="h3">{featured[this.state.featurePos].title}</Link>
+                    <Link to={`/product_card/${activeGood.id}`} className="h3">{activeGood.title}</Link>
                     <p>Производитель:
-                        <span>{featured[this.state.featurePos].brand}</span>
+                        <span>{activeGood.brand}</span>
                     </p>
-                    <h3 className="h3">{`${featured[this.state.featurePos].price.toLocaleString('ru-RU')} ₽`}</h3>
+                    <h3 className="h3">{`${activeGood.price.toLocaleString('ru-RU')} ₽`}</h3>
                 </div>
             </section>
         )
