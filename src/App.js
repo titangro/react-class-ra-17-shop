@@ -48,7 +48,6 @@ class App extends Component {
   }
 
   componentUnMount(props, states) {
-    console.log(props, states);
     this.unlisten();
   }
 
