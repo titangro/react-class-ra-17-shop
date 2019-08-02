@@ -25,16 +25,20 @@ class Order extends Component {
       this.updateCartProducts(this.props);
     }
 
-    if (this.props.categories.length && !this.props.order && !this.props.cart.length)
-      window.location.pathname = '/';
+    if (this.props.categories.length && !this.props.order && !this.props.cart.length) {
+      this.props.history.push('/');
+      //window.location.pathname = '/';
+    }
   }
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.cart.length && this.props.cart.reduce((sum,{amount}) => sum + amount,0) !== nextProps.cart.reduce((sum,{amount}) => sum + amount,0))
       this.updateCartProducts(nextProps);
 
-    if (!nextProps.cart.length && !nextProps.order)
-      window.location.pathname = '/';
+    if (!nextProps.cart.length && !nextProps.order) {
+      this.props.history.push('/');
+      //window.location.pathname = '/';
+    }
   }
   
   componentWillUnmount() {
@@ -127,7 +131,7 @@ class Order extends Component {
         <Breadcrumbs {...this.props} categoryName={'Оформление заказа'} />
         {!this.props.order ?
           <OrderProgress {...this.state} validateForm={this.validateForm.bind(this)} handleQuantity={this.handleQuantity.bind(this)} sendForm={this.sendForm.bind(this)} />
-          : <OrderDone order={this.props.order.data.info} email={this.props.order.email} sumOrder={this.props.order.sumOrder} />
+          : <OrderDone order={this.props.order.data.info} email={this.props.order.email} sumOrder={this.props.order.sumOrder} history={this.props.history} />
         }        
       </React.Fragment>
     ) : <div>
@@ -140,7 +144,8 @@ Order.propTypes = {
   fetchSingleProduct: PropTypes.func.isRequired,
   cart: PropTypes.array.isRequired,
   addCart: PropTypes.func.isRequired,
-  fetchCart: PropTypes.func.isRequired
+  fetchCart: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 }
 
 export default Order;

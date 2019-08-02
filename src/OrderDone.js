@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const OrderDone = ({order, email, sumOrder}) => {
+const OrderDone = ({order, email, sumOrder, history}) => {
   /* Расшифровка для ключа оплаты */
   const paidObj = {
     'onlineCard': 'Картой онлайн',
@@ -10,13 +9,17 @@ const OrderDone = ({order, email, sumOrder}) => {
     'offlineCash': 'Наличными курьеру'
   }
 
-  const relocateToCatalog = () => window.location.pathname = '/catalog';
+  const relocateToCatalog = () => {
+    history.push('/');
+  }
+  
+  //window.location.pathname = '/catalog';
 
   return (
     <section className="order-done">
       <h2 className="order-done__title order-process__title">Заказ принят, спасибо!</h2>
       <div className="order-done__information order-info">
-        <div className="order-info__item order-info__item_summ"> 
+        <div className="order-info__item order-info__item_summ">
           <h3>Сумма заказа:</h3>
           <p>{sumOrder.toLocaleString('RU-ru')}&nbsp;<i className="fa fa-rub" aria-hidden="true"></i></p>
         </div>
@@ -52,7 +55,9 @@ OrderDone.propTypes = {
     cart: PropTypes.string.isRequired,
   }),
   sumOrder: PropTypes.number.isRequired,
-  email: PropTypes.string.isRequired
+  email: PropTypes.string.isRequired,  
+  history: PropTypes.object.isRequired,
+  handleFilter: PropTypes.func.isRequired
 }
 
 export default OrderDone;
