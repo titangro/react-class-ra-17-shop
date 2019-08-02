@@ -7,12 +7,13 @@ const Pagination = ({products, handleFilter, getSearchParam, showFilter }) => {
     for (let i = 1; i <= products.pages; i++) {
         pages.push(i);
     }
+    const location = window.location.pathname.slice(window.location.pathname.lastIndexOf('/'));
 
     return products.status === "ok" && products.pages > 1 ? (
         <div className="product-catalogue__pagination">
             <div className="page-nav-wrapper">
                 <div className="angle-back">
-                    {products.page !== 1 ? <Link to={window.location.pathname + showFilter(['page'], [products.page - 1])} onClick={() => {
+                    {products.page !== 1 ? <Link to={location + showFilter(['page'], [products.page - 1])} onClick={() => {
                             handleFilter(showFilter(['page'], [products.page - 1]));
                             window.scrollTo(0, 0)
                         }}></Link> : ''}
@@ -21,7 +22,7 @@ const Pagination = ({products, handleFilter, getSearchParam, showFilter }) => {
                     {pages.map(
                         (page, index) =>
                         <li key={index} className={page === products.page ? 'active' : ''}>
-                            <Link to={window.location.pathname + showFilter(['page'], [page])} onClick={() => {
+                            <Link to={location + showFilter(['page'], [page])} onClick={() => {
                                 handleFilter(showFilter(['page'], [page]));
                                 window.scrollTo(0, 0)
                             }}>{page}</Link>
@@ -29,7 +30,7 @@ const Pagination = ({products, handleFilter, getSearchParam, showFilter }) => {
                     )}
                 </ul>
                 <div className="angle-forward">
-                    {products.pages !== +getSearchParam('page') ? <Link to={window.location.pathname + showFilter(['page'], [products.page + 1])} onClick={() => {
+                    {products.pages !== +getSearchParam('page') ? <Link to={location + showFilter(['page'], [products.page + 1])} onClick={() => {
                             handleFilter(showFilter(['page'], [products.page + 1]));
                             window.scrollTo(0, 0)
                         }}></Link> : ''}
