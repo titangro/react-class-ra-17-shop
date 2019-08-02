@@ -261,21 +261,32 @@ class App extends Component {
   addCart(id, size, amount) {
     if (id === 'undefined' || size === 'undefined' || amount === 'undefined')
       return console.log(`Не указан один из обязательный параметров. id:${id}, size:${size}, amount:${amount}`);
-    return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${localStorage.cart && localStorage.cart !== 'undefined' ? localStorage.cart : ''}`,{
-      method: 'POST',
-      mode: 'cors',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: id,
-        size: size,
-        amount: amount
-      })
-    })
+    return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${localStorage.cart && localStorage.cart !== 'undefined' ? localStorage.cart : ''}`)
       .then(res => res.json())
-      .then(res => res)
+      .then(
+        cart => {
+          if (cart.status === "ok"){
+            const curProduct = cart.data.products.filter(product => product.id === id)[0];
+            return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${cart.data.id}`,{
+              method: 'POST',
+              mode: 'cors',
+              credentials: 'same-origin',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id: id,
+                size: size,
+                amount: amount + curProduct.amount
+              })
+            })
+              .then(res => res.json())
+              .then(res => res)
+          } else {
+            console.log(cart.message);
+          }          
+        }
+      )
   }
 
   deleteGoodFromCart(productId, size) {

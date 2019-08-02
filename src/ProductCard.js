@@ -111,6 +111,7 @@ class ProductCard extends Component {
     } else {
       this.props.addCart(this.state.product.id, this.state.activeSize.size, this.state.quantity)
         .then(res => {
+          console.log(res)
           if (res.status === 'ok') {
             localStorage.cart = res.data.id;
             this.props.fetchCart(res.data.id);
