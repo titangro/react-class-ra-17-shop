@@ -14,7 +14,7 @@ class Favorite extends Component {
 
     this.state ={
       favorite: localStorage.favorite ? JSON.parse(localStorage.favorite) : [],
-      products: {}
+      products: null
     }
   }
   
@@ -29,6 +29,20 @@ class Favorite extends Component {
       })
   }
 
+  componentWillUpdate() {
+    const newFavorite = localStorage.favorite ? JSON.parse(localStorage.favorite) : [];
+    if (this.state.favorite.length !== newFavorite.length) {
+      this.props.fetchProductsByParams([{key:'id', params: newFavorite}])
+      .then(res => {
+        this.setState({products: res})
+      })
+    }
+  }
+
+  fetchFavoriteProducts() {
+    
+  }
+
   componentWillUnmount() {
     this._isMounted = false;
   }
@@ -38,23 +52,26 @@ class Favorite extends Component {
     return this.state.favorite.length ? (
       <React.Fragment>
         <Breadcrumbs {...this.props} categoryName={'Избранное'} />
-        <main className="product-catalogue product-catalogue_favorite">          
-          <section className="product-catalogue__head product-catalogue__head_favorite">
-            <div className="product-catalogue__section-title">
-              <h2 className="section-name">В вашем избранном</h2><span className="amount amount_favorite"> {this.state.favorite.length} товаров</span>
-            </div>
-            <div className="product-catalogue__sort-by">
-              <p className="sort-by">Сортировать</p>
-              <Sorting {...this.props} />
-            </div>
-          </section>
-          <section className="product-catalogue__item-list product-catalogue__item-list_favorite" style={{width: '1200px'}}>
-            <Products products={this.state.products.data} fetchSizes={this.props.fetchSizes} handleFavorite={(id) => {
-              this.props.handleFavorite(id);
-              this.setState({favorite: localStorage.favorite ? JSON.parse(localStorage.favorite) : []})
-            }} />
-          </section>
-          <Pagination {...this.props} products={this.state.products} />
+        <main className="product-catalogue product-catalogue_favorite">
+          {this.state.products ?
+            <React.Fragment>
+              <section className="product-catalogue__head product-catalogue__head_favorite">
+                <div className="product-catalogue__section-title">
+                  <h2 className="section-name">В вашем избранном</h2><span className="amount amount_favorite"> {this.state.favorite.length} товаров</span>
+                </div>
+                <div className="product-catalogue__sort-by">
+                  <p className="sort-by">Сортировать</p>
+                  <Sorting {...this.props} />
+                </div>
+              </section>
+              <section className="product-catalogue__item-list product-catalogue__item-list_favorite" style={{width: '1200px'}}>
+                <Products products={this.state.products.data} fetchSizes={this.props.fetchSizes} handleFavorite={(id) => {
+                  this.props.handleFavorite(id);
+                  this.setState({favorite: localStorage.favorite ? JSON.parse(localStorage.favorite) : []})
+                }} />
+              </section>
+              <Pagination {...this.props} products={this.state.products} />
+            </React.Fragment> : ''}           
         </main>
       </React.Fragment>
     ) : (

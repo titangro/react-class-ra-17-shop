@@ -36,10 +36,11 @@ class Cart extends Component {
     }
 
     render() {
+        const style = this.state.cart.length > 3 ? {overflowY: 'auto'} : {overflowY: 'hidden'};
         return this.state.products.length ? (
             <React.Fragment>
                 <div className="basket-dropped__title">В вашей корзине:</div>
-                <div className="basket-dropped__product-list product-list">
+                <div className="basket-dropped__product-list product-list" style={style}>
                     {this.state.cart.map(
                         product => {
                             const good = this.state.products.filter(item => item.id === product.id)[0];
