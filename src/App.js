@@ -415,7 +415,9 @@ class App extends Component {
   }
 
   render() {
-    const history = createBrowserHistory();
+    const history = createBrowserHistory({
+      basename: process.env.PUBLIC_URL
+    });
     const FavoriteWithWrapper = this.withWrapper(Favorite);
     const OrderWithWrapper = this.withWrapper(Order, 'order-wrapper');
     return (
