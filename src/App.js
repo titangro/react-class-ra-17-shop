@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { createBrowserHistory, createHashHistory } from 'history';
 import Header from './Header';
 import Homepage from './Homepage';
 import Footer from './Footer';
 import Catalog from './Catalog';
 import Order from './Order';
-import OrderDone from './OrderDone';
 import ProductCard from './ProductCard';
 import Favorite from './Favorite';
 import Preloader from './Preloader';
@@ -267,6 +266,7 @@ class App extends Component {
         cart => {
           if (cart.status === "ok"){
             const curProduct = cart.data.products.filter(product => product.id === id)[0];
+            console.log(amount, curProduct, amount + curProduct ? curProduct.amount : 0)
             return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${cart.data.id}`,{
               method: 'POST',
               mode: 'cors',
@@ -277,7 +277,7 @@ class App extends Component {
               body: JSON.stringify({
                 id: id,
                 size: size,
-                amount: amount + curProduct.amount
+                amount: amount + curProduct ? curProduct.amount : 0
               })
             })
               .then(res => res.json())
@@ -419,7 +419,7 @@ class App extends Component {
     const FavoriteWithWrapper = this.withWrapper(Favorite);
     const OrderWithWrapper = this.withWrapper(Order, 'order-wrapper');
     return (
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <BrowserRouter basename={process.env.PUBLIC_URL} history={history}>
         <div className="container" >
           <Preloader hidden={!this.state.isLoading} />
           <Header {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} handleFilter={this.handleFilter.bind(this)} fetchActiveSubcategories={this.fetchActiveSubcategories.bind(this)} showFilter={this.showFilter.bind(this)} history={history} getSearchParam={this.getSearchParam.bind(this)} deleteGoodFromCart={this.deleteGoodFromCart.bind(this)} />                         
