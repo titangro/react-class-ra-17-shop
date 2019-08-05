@@ -52,11 +52,12 @@ class Header extends Component {
             const filter = this.props.showFilter(['search'], [this.state.search], true);
             this.props.handleFilter(filter);
             this.props.history.push('/catalog' + filter);
+            this.shutDownCart();
         }
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.search === this.state.search && (this.state.activeCategory || this.state.activeSearch || this.state.activeProfile || this.state.activeCart ))
+        if (nextState.search === this.state.search && nextProps.history.action === "PUSH" && (this.state.activeCategory || this.state.activeSearch || this.state.activeProfile || this.state.activeCart ))
             this.shutDownCart();
     }
 
@@ -99,16 +100,19 @@ class Header extends Component {
                         <div className="header-main__profile">
                             <div className="header-main__pics">
                                 <div className={`header-main__pic header-main__pic_search ${this.state.activeSearch ? 'header-main__pic_search_is-hidden' : ''}`} 
-                                    onClick={() => this.setState({activeSearch: !this.state.activeSearch, activeCart: false, activeProfile: false})}>
+                                    onClick={() => 
+                                    this.setState({activeSearch: !this.state.activeSearch, activeCart: false, activeProfile: false, activeCategory: null})}>
                                 </div>
                                 <div className="header-main__pic_border"></div>
                                 <div className="header-main__pic header-main__pic_profile" 
-                                    onClick={() => this.setState({activeProfile: !this.state.activeProfile, activeCart: false, activeSearch: false})}>
+                                    onClick={() => 
+                                    this.setState({activeProfile: !this.state.activeProfile, activeCart: false, activeSearch: false, activeCategory: null})}>
                                     <div className={`header-main__pic_profile_menu ${this.state.activeProfile ? 'header-main__pic_profile_menu_is-active' : ''}`}></div>
                                 </div>
                                 <div className="header-main__pic_border"></div>
                                 <div className="header-main__pic header-main__pic_basket" 
-                                    onClick={() => this.setState({activeCart: !this.state.activeCart, activeProfile: false, activeSearch: false})}>
+                                    onClick={() => 
+                                    this.setState({activeCart: !this.state.activeCart, activeProfile: false, activeSearch: false, activeCategory: null})}>
                                     <div className="header-main__pic_basket_full" style={{display: this.props.cart.length ? 'block' : 'none'}}>{this.props.cart.reduce((sum,{amount}) => sum + amount,0)}</div>
                                     <div className={`header-main__pic_basket_menu ${this.state.activeCart ? 'header-main__pic_basket_menu_is-active' : ''}`}></div>
                                 </div>

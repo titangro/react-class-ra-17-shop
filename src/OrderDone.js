@@ -14,8 +14,6 @@ const OrderDone = ({order, email, sumOrder, history}) => {
     history.push('/');
   }
   
-  //window.location.pathname = '/catalog';
-
   return (
     <section className="order-done">
       <h2 className="order-done__title order-process__title">Заказ принят, спасибо!</h2>
