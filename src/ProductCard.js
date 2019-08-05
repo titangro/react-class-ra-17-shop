@@ -5,6 +5,7 @@ import favoriteImage from './img/product-card-pics/product-card__favorite-fill.p
 import Viewed from './Viewed';
 import Similar from './Similar';
 import PropTypes from 'prop-types';
+import './css/style-product-card.css';
 //import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 class ProductCard extends Component {

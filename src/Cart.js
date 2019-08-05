@@ -28,13 +28,6 @@ class Cart extends Component {
         }
     }
 
-    handleOrder() {
-        const basketMenu = document.querySelector('.header-main__pic_basket_menu');
-        const panel = document.querySelector('.header-main__hidden-panel');
-        basketMenu.classList.remove('header-main__pic_basket_menu_is-active');
-        panel.classList.remove('header-main__hidden-panel_visible');
-    }
-
     render() {
         const style = this.state.cart.length > 3 ? {overflowY: 'auto'} : {overflowY: 'hidden'};
         return this.state.products.length ? (
@@ -72,7 +65,7 @@ class Cart extends Component {
                         }
                     )}
                 </div>
-                <Link className="basket-dropped__order-button" to="/order" onClick={() => this.handleOrder()}>Оформить заказ</Link>
+                <Link className="basket-dropped__order-button" to="/order" onClick={() => this.props.shutDownCart()}>Оформить заказ</Link>
             </React.Fragment>
         ) : <div className="basket-dropped__title" style={{fontWeight: 'normal'}}>В корзине пока ничего нет. Не знаете, с чего начать? Посмотрите наши <Link to="/" style={{color: '#fff'}}>новинки</Link>!</div>
     }
@@ -85,7 +78,8 @@ Cart.propTypes = {
     showFilter: PropTypes.func.isRequired,
     getSearchParam: PropTypes.func.isRequired,
     deleteGoodFromCart: PropTypes.func.isRequired,
-    cart: PropTypes.array.isRequired
+    cart: PropTypes.array.isRequired,
+    shutDownCart: PropTypes.func.isRequired
 }        
 
 export default Cart;

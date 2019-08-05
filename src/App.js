@@ -9,6 +9,9 @@ import Order from './Order';
 import ProductCard from './ProductCard';
 import Favorite from './Favorite';
 import Preloader from './Preloader';
+import './css/normalize.css';
+import './css/font-awesome.min.css';
+import './css/style.css';
 
 class App extends Component {
   _isMounted = false;

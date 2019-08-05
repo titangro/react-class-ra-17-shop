@@ -4,6 +4,7 @@ import Breadcrumbs from './Breadcrumbs';
 import OrderProgress from './OrderProgress';
 import OrderDone from './OrderDone';
 import { withRouter } from "react-router-dom";
+import './css/style-order.css';
 
 class Order extends Component {
   _isMounted = false;

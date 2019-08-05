@@ -37,6 +37,15 @@ class Header extends Component {
         this.setState({search: searchStr});
     }
 
+    shutDownCart() {        
+        this.setState({
+            activeCategory: null,
+            activeSearch: false,
+            activeProfile: false,
+            activeCart: false,
+        });
+    }
+
     submitSearch(event) {
         event.preventDefault();
         if (this.state.search !== '') {
@@ -44,6 +53,11 @@ class Header extends Component {
             this.props.handleFilter(filter);
             this.props.history.push('/catalog' + filter);
         }
+    }
+
+    componentWillUpdate(nextProps) {
+        if (nextProps.history.action === "PUSH" && (this.state.activeCategory || this.state.activeSearch || this.state.activeProfile || this.state.activeCart ))
+            this.shutDownCart();
     }
 
     render() {
@@ -115,7 +129,7 @@ class Header extends Component {
                                 <a href="#">Выйти</a>
                             </div>
                             <div className={`hidden-panel__basket basket-dropped ${this.state.activeCart ? 'hidden-panel__basket_visible' : ''}`}>
-                                <Cart {...this.props} />                                
+                                <Cart {...this.props} shutDownCart={this.shutDownCart.bind(this)} />                                
                             </div>
                         </div>
                     </div>
