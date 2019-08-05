@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from "react-router-dom";
 
 const OrderDone = ({order, email, sumOrder, history}) => {
   /* Расшифровка для ключа оплаты */
@@ -56,8 +57,7 @@ OrderDone.propTypes = {
   }),
   sumOrder: PropTypes.number.isRequired,
   email: PropTypes.string.isRequired,  
-  history: PropTypes.object.isRequired,
-  handleFilter: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired
 }
 
-export default OrderDone;
+export default withRouter(OrderDone);

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Breadcrumbs from './Breadcrumbs';
 import OrderProgress from './OrderProgress';
 import OrderDone from './OrderDone';
+import { withRouter } from "react-router-dom";
 
 class Order extends Component {
   _isMounted = false;
@@ -27,7 +28,6 @@ class Order extends Component {
 
     if (this.props.categories.length && !this.props.order && !this.props.cart.length) {
       this.props.history.push('/');
-      //window.location.pathname = '/';
     }
   }
 
@@ -37,7 +37,6 @@ class Order extends Component {
 
     if (!nextProps.cart.length && !nextProps.order) {
       this.props.history.push('/');
-      //window.location.pathname = '/';
     }
   }
   
@@ -148,4 +147,4 @@ Order.propTypes = {
   history: PropTypes.object.isRequired,
 }
 
-export default Order;
+export default withRouter(Order);

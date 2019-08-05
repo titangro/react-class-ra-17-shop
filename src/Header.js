@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import logoImg from './img/header-logo.png';
 import Cart from './Cart';
 import PropTypes from 'prop-types';
+import { withRouter } from "react-router-dom";
 
 class Header extends Component {
     constructor(props) {
@@ -40,10 +41,8 @@ class Header extends Component {
         event.preventDefault();
         if (this.state.search !== '') {
             const filter = this.props.showFilter(['search'], [this.state.search], true);
-            this.props.history.push(window.location.pathname + filter);
             this.props.handleFilter(filter);
-            /*if (window.location.pathname !== '/catalog')
-                window.location.pathname = '/catalog';*/
+            this.props.history.push('/catalog' + filter);
         }
     }
 
@@ -165,4 +164,4 @@ Header.propTypes = {
     getSearchParam: PropTypes.func.isRequired
 }
 
-export default Header;
+export default withRouter(Header);
