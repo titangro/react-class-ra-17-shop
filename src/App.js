@@ -264,13 +264,14 @@ class App extends Component {
   addCart(id, size, amount) {
     if (id === 'undefined' || size === 'undefined' || amount === 'undefined')
       return console.log(`Не указан один из обязательный параметров. id:${id}, size:${size}, amount:${amount}`);
-    return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${localStorage.cart && localStorage.cart !== 'undefined' ? localStorage.cart : ''}`)
+    if (localStorage.cart && localStorage.cart !== 'undefined') {
+      return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${localStorage.cart && localStorage.cart !== 'undefined' ? localStorage.cart : ''}`)
       .then(res => res.json())
       .then(
         cart => {
           if (cart.status === "ok"){
-            const curProduct = cart.data.products.filter(product => product.id === id)[0];
-            console.log(amount, curProduct, amount + curProduct ? curProduct.amount : 0)
+            const curProduct = cart.data.products.filter(product => product.id === id && product.size === size)[0];
+            console.log(curProduct)
             return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${cart.data.id}`,{
               method: 'POST',
               mode: 'cors',
@@ -281,7 +282,7 @@ class App extends Component {
               body: JSON.stringify({
                 id: id,
                 size: size,
-                amount: amount + curProduct ? curProduct.amount : 0
+                amount: curProduct ? (curProduct.size === size ? curProduct.amount + amount : amount) : amount
               })
             })
               .then(res => res.json())
@@ -291,6 +292,23 @@ class App extends Component {
           }          
         }
       )
+    } else {
+      return fetch('https://api-neto.herokuapp.com/bosa-noga/cart/',{
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: id,
+          size: size,
+          amount: amount
+        })
+      })
+        .then(res => res.json())
+        .then(res => res)
+    }    
   }
 
   deleteGoodFromCart(productId, size) {

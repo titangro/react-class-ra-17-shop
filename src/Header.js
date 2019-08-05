@@ -42,8 +42,8 @@ class Header extends Component {
             const filter = this.props.showFilter(['search'], [this.state.search], true);
             this.props.history.push(window.location.pathname + filter);
             this.props.handleFilter(filter);
-            if (window.location.pathname !== '/catalog')
-                window.location.pathname = '/catalog';
+            /*if (window.location.pathname !== '/catalog')
+                window.location.pathname = '/catalog';*/
         }
     }
 
