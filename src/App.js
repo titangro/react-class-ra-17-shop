@@ -374,10 +374,12 @@ class App extends Component {
   showFilter(paramKeys, values, withoutPaginationSortBy = false, withoutFilters = false) {
     const params = paramKeys.map(paramKey => this.getSearchParam(paramKey)).filter(item => item !== undefined && item !== null);
     const searchParams = this.getSearchParam();
-    const searchKeys = !withoutPaginationSortBy ? this.getSearchParam('keys') 
+    let searchKeys = !withoutPaginationSortBy ? this.getSearchParam('keys') 
       : !withoutFilters ? this.getSearchParam('keys').filter(item => item !== 'page' && item !== 'sortBy')
-      : this.getSearchParam('keys').filter(item => item === 'categoryId');
-    if (params.length) {
+      : this.getSearchParam('keys').filter(item => item === 'categoryId' || item === 'search');
+    searchKeys = [...searchKeys.slice(searchKeys.indexOf("search"), searchKeys.indexOf("search") + 1),...searchKeys.filter(item => item !== 'search')];
+    //console.log(searchParams, params)
+    if (params.length) {      
       let index = 0;
       for (const paramKey of paramKeys) {   
         if (paramKey === 'size[]' || paramKey === 'heelSize[]') {
@@ -393,7 +395,6 @@ class App extends Component {
       return `?${searchKeys.filter(key => searchParams[key] !== false).map(
           key => {
             if (key === 'size[]' || key === 'heelSize[]') {
-              console.log(searchParams[key].length)
               if (searchParams[key].length && searchParams[key][0] !== "" && searchParams[key][0])
                 return `${searchParams[key].join(',').split(',').map(item => `${key}=${item}`).join('&')}`;              
             } else

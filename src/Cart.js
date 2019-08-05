@@ -78,8 +78,7 @@ Cart.propTypes = {
     showFilter: PropTypes.func.isRequired,
     getSearchParam: PropTypes.func.isRequired,
     deleteGoodFromCart: PropTypes.func.isRequired,
-    cart: PropTypes.array.isRequired,
-    shutDownCart: PropTypes.func.isRequired
+    cart: PropTypes.array.isRequired
 }        
 
 export default Cart;

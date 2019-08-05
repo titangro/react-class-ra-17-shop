@@ -7,8 +7,14 @@ const Breadcrumbs = ({categoryId, categoryName, handleFilter, getSearchParam, pr
     const links = [{name: 'Главная', link: '/'}];
     let categoryLink;
     if (categoryId) {
-        categoryLink = `/catalog?categoryId=${categoryId}`;
-        links.push({name: categoryName, link: categoryLink});
+        if (categoryName === 'Результаты поиска') {
+            /* Результаты поиска */
+            //links.push({name: categoryName, link: `/catalog?search=${getSearchParam('search')}`});            
+        } else {
+            /* Категория товаров */
+            categoryLink = `/catalog?categoryId=${categoryId}`;
+            links.push({name: categoryName, link: categoryLink});
+        }
     }
 
     /* Карточка товаров */
@@ -24,11 +30,6 @@ const Breadcrumbs = ({categoryId, categoryName, handleFilter, getSearchParam, pr
         links.push({name: categoryName, link: '/catalog'});
     }
 
-    /* Результаты поиска */
-    if (categoryName === 'Результаты поиска') {
-        links.push({name: categoryName, link: `/catalog?search=${getSearchParam('search')}`});
-    }
-
     /* Избранное */
     if (categoryName === 'Избранное') {
         links.push({name: categoryName, link: '/favorite'});
@@ -38,19 +39,22 @@ const Breadcrumbs = ({categoryId, categoryName, handleFilter, getSearchParam, pr
     if (categoryName === 'Оформление заказа') {
         links.push({name: categoryName, link: '/order'});
     }
-    
-    /* Подкатегория в каталоге */
-    let searchParams;
-    if (typeof getSearchParam === 'function') {
-        searchParams = getSearchParam();
-        //console.log(searchParams)
-        if (Object.keys(searchParams).length > 1) {
-            const subcategoriesType = Object.keys(searchParams)[1];
-            const subcategoriesName = decodeURIComponent(searchParams[subcategoriesType]);
-            const subcategoriesLink = `${categoryLink}&${subcategoriesType}=${subcategoriesName}`;
-            //console.log(subcategoriesType)
-            if (subcategoriesType === 'reason' || subcategoriesType === 'season' || subcategoriesType === 'brand' || subcategoriesType === 'type')
-                links.push({name: subcategoriesName, link: subcategoriesLink});
+
+    /* Результаты поиска */
+    if (categoryName === 'Результаты поиска') {
+        links.push({name: categoryName, link: `/catalog?search=${getSearchParam('search')}`});
+    } else {
+        /* Подкатегория в каталоге */
+        let searchParams;
+        if (typeof getSearchParam === 'function') {
+            searchParams = getSearchParam();
+            if (Object.keys(searchParams).length > 1) {
+                const subcategoriesType = Object.keys(searchParams)[1];
+                const subcategoriesName = decodeURIComponent(searchParams[subcategoriesType]);
+                const subcategoriesLink = `${categoryLink}&${subcategoriesType}=${subcategoriesName}`;
+                if (subcategoriesType === 'reason' || subcategoriesType === 'season' || subcategoriesType === 'brand' || subcategoriesType === 'type')
+                    links.push({name: subcategoriesName, link: subcategoriesLink});
+            }
         }
     }
 

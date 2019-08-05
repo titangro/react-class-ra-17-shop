@@ -187,8 +187,8 @@ const Sidebar = ({filters, productsWithoutFilters, activeFilter, handleFilter, g
             <section className="sidebar__division">
                 <div className="drop-down">
                     <Link 
-                        to={`/catalog${getSearchParam('categoryId') ? showFilter(['categoryId'], [getSearchParam('categoryId')], true, true) : ''}`}
-                        onClick={(event) => {checkFilter(event, showFilter(['categoryId'], [getSearchParam('categoryId')], true, true))}} >
+                        to={`/catalog${showFilter(['search','categoryId'], [getSearchParam('search'), getSearchParam('categoryId')], true, true)}`}
+                        onClick={(event) => {checkFilter(event, showFilter(['search','categoryId'], [getSearchParam('search'), getSearchParam('categoryId')], true, true))}} >
                         <span className="drop-down-icon"></span>Сбросить
                     </Link>
                 </div>

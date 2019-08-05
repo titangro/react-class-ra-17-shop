@@ -55,8 +55,8 @@ class Header extends Component {
         }
     }
 
-    componentWillUpdate(nextProps) {
-        if (nextProps.history.action === "PUSH" && (this.state.activeCategory || this.state.activeSearch || this.state.activeProfile || this.state.activeCart ))
+    componentWillUpdate(nextProps, nextState) {
+        if (nextState.search === this.state.search && (this.state.activeCategory || this.state.activeSearch || this.state.activeProfile || this.state.activeCart ))
             this.shutDownCart();
     }
 
@@ -129,7 +129,7 @@ class Header extends Component {
                                 <a href="#">Выйти</a>
                             </div>
                             <div className={`hidden-panel__basket basket-dropped ${this.state.activeCart ? 'hidden-panel__basket_visible' : ''}`}>
-                                <Cart {...this.props} shutDownCart={this.shutDownCart.bind(this)} />                                
+                                <Cart {...this.props} />                                
                             </div>
                         </div>
                     </div>
