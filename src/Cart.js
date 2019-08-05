@@ -65,7 +65,7 @@ class Cart extends Component {
                         }
                     )}
                 </div>
-                <Link className="basket-dropped__order-button" to="/order" onClick={() => this.props.shutDownCart()}>Оформить заказ</Link>
+                <Link className="basket-dropped__order-button" to="/order">Оформить заказ</Link>
             </React.Fragment>
         ) : <div className="basket-dropped__title" style={{fontWeight: 'normal'}}>В корзине пока ничего нет. Не знаете, с чего начать? Посмотрите наши <Link to="/" style={{color: '#fff'}}>новинки</Link>!</div>
     }
