@@ -34,13 +34,22 @@ class ProductCard extends Component {
         product: data,
         curImage: data.images[0],
         favorite: localStorage.favorite ? (JSON.parse(localStorage.favorite).filter(id => +id === data.id).length ? true : false) : false,
+        cartBtn: 'В корзину',
+        activeSize: null,
         quantity: 1
       }))
   }
 
   componentWillUpdate(nextProps, nextState) {
-    if (this.state.product && nextState.product.id !== this.state.product.id)
+    if (this.state.product && nextState.product.id !== this.state.product.id) {
       this.props.addViewed(nextState.product.id);
+      this.setState({
+        activeSize: null,
+        favorite: localStorage.favorite ? (JSON.parse(localStorage.favorite).filter(id => +id === nextState.product.id).length ? true : false) : false,
+        cartBtn: 'В корзину',
+        quantity: 1
+      })
+    }
   }
 
   componentWillUnmount() {
