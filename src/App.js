@@ -268,14 +268,14 @@ class App extends Component {
     if (id === 'undefined' || size === 'undefined' || amount === 'undefined')
       return console.log(`Не указан один из обязательный параметров. id:${id}, size:${size}, amount:${amount}`);
     if (localStorage.cart && localStorage.cart !== 'undefined') {
-      return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${localStorage.cart && localStorage.cart !== 'undefined' ? localStorage.cart : ''}`)
+      return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${localStorage.cart}`)
       .then(res => res.json())
       .then(
         cart => {
           if (cart.status === "ok"){
             const curProduct = cart.data.products.filter(product => product.id === id && product.size === size)[0];
-            console.log(curProduct)
-            return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${cart.data.id}`,{
+            //console.log(curProduct, curProduct && amount !== 0 ? (curProduct.size === size ? curProduct.amount + amount : amount) : amount)
+            return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${localStorage.cart}`,{
               method: 'POST',
               mode: 'cors',
               credentials: 'same-origin',
@@ -285,7 +285,7 @@ class App extends Component {
               body: JSON.stringify({
                 id: id,
                 size: size,
-                amount: curProduct ? (curProduct.size === size ? curProduct.amount + amount : amount) : amount
+                amount: curProduct && amount !== 0 ? (curProduct.size === size ? curProduct.amount + amount : amount) : amount
               })
             })
               .then(res => res.json())
@@ -316,13 +316,15 @@ class App extends Component {
 
   deleteGoodFromCart(productId, size) {
     this.addCart(productId, size, 0)
-        .then(res => {
-            if (res.status === 'ok') {
-                this.fetchCart(res.data.id);
-            } else {
-                console.log(res.message);
-            }
-        })
+      .then(res => {
+        if (res.status === 'ok') {
+          this.fetchCart(res.data.id);
+        } else {
+          localStorage.cart = '';
+          this.setState({cart: []});
+          //console.log(res.message);                
+        }
+      })
   }
 
   addViewed(id) {
@@ -419,10 +421,6 @@ class App extends Component {
       .catch(err => {
         this.setState({isLoading: false, errors: [...this.state.errors, err] })
       });
-  }
-
-  updateApp() {
-    this.render();
   }
   
   withWrapper(Component, cls='') {

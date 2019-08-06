@@ -14,6 +14,9 @@ class Cart extends Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
+        if (nextProps.cart.length === 0 && this.state.cart.length !== 0) {
+            this.setState({cart: [], products: []})
+        }
         if (nextProps.cart.length && this.props.cart.reduce((sum,{amount}) => sum + amount,0) !== nextProps.cart.reduce((sum,{amount}) => sum + amount,0)) {     
             Promise.all(
                 nextProps.cart.map(
