@@ -14,7 +14,7 @@ class BrandFilter extends Component {
     handleSearch(searchStr) {
         this.setState({
             search: searchStr,
-            brands: this.props.brands.filter(item => item.toLowerCase().indexOf(searchStr.toLowerCase()) !== -1).slice(0, 5)
+            brands: searchStr === '' ? [] : this.props.brands.filter(item => item.toLowerCase().indexOf(searchStr.toLowerCase()) !== -1).slice(0, 5)
         });
     }
 

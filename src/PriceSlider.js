@@ -26,7 +26,7 @@ class PriceSlider extends Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (this.state.minPrice !== nextState.minPrice || this.state.maxPrice !== nextState.maxPrice) {
+        if ((!this.state.activeCircle && (this.state.minPrice !== nextState.minPrice || this.state.maxPrice !== nextState.maxPrice)) || this.state.activeCircle && this.state.activeCircle !== nextState.activeCircle) {
             this.updatePriceFilter(nextState);
         }
     }
@@ -74,18 +74,18 @@ class PriceSlider extends Component {
     /* Изменение слайдера цены по движению мыши */
     changeInputFromMouse = debounce((event) => {
         if (this.state.activeCircle) {
-            const isFirstCircle = event.target.classList.contains('circle-1');           
+            const isFirstCircle = event.target.classList.contains('circle-1');
             const node = isFirstCircle ? this.input1 : this.input2;
-            const delta = event.nativeEvent.clientX - this.state.circlePos;
+            const delta = event.nativeEvent.x - this.state.circlePos;
             const curValue = isFirstCircle ? this.state.minPrice : this.state.maxPrice;
 
-            this.changeInput(node, '' + (curValue + Math.floor(delta / 2 / 240 * this.state.max / 100) * 100) );
+            this.changeInput(node, '' + (curValue + Math.round(delta * this.state.max / 240 / 4 / 100) * 100) );
         }
     }, this.timeout)
 
     activateSlider(event) {
         this.activeTimeout = true;
-        this.setState({activeCircle: true, circlePos: event.nativeEvent.clientX});
+        this.setState({activeCircle: true, circlePos: event.nativeEvent.x});
     }
 
     deactivateSlider() {
@@ -96,16 +96,16 @@ class PriceSlider extends Component {
     render() {        
         const width = 240 - this.movePriceSlider('left') - this.movePriceSlider('right') - 25;
         return ( 
-            <div className="price-slider">
+            <div className="price-slider"
+                onMouseUp={() => this.deactivateSlider()}
+                onMouseLeave={() => this.deactivateSlider()}>
                 <div className="circle-container">
                     <div className="circle-1" style={{left: `${this.movePriceSlider('left')}px`}}
                         onMouseDown={(event) => this.activateSlider(event)}
                         onMouseMove={(event) => {
                             event.persist();
                             this.changeInputFromMouse(event);
-                        }}
-                        onMouseUp={() => this.deactivateSlider()}
-                        onMouseLeave={() => this.deactivateSlider()}
+                        }}                        
                         ></div>
                     <div className="line-white"></div>
                     <div className="line-colored" style={{left: `${this.movePriceSlider('left') + 25}px`, width: `${width}px`}}></div>
@@ -114,9 +114,7 @@ class PriceSlider extends Component {
                         onMouseMove={(event) => {
                             event.persist();
                             this.changeInputFromMouse(event);
-                        }}
-                        onMouseUp={() => this.deactivateSlider()}
-                        onMouseLeave={() => this.deactivateSlider()}></div>
+                        }}></div>
                 </div>
                 <div className="counter">
                     <input type="text" className="input-1" ref={(input) => { this.input1 = input; }} value={this.state.minPrice} onChange={(event) => this.changeInput(event.target)} />
