@@ -976,6 +976,15 @@ li a:hover {
 .hidden-panel__basket_visible {
   display: flex;
 }
+@media (max-width: 1205px) {
+  .hidden-panel {
+    width: 100%;
+    padding: 10px 2% 15px;
+  }
+  .hidden-panel .wrapper {
+    width: auto;
+  }
+}
 .basket-dropped {
   justify-content: space-between;
   align-items: center;
