@@ -115,7 +115,7 @@ class Order extends Component {
   handleQuantity(productId, size, newAmount) {
     if (newAmount === 0)
       return false;
-    this.props.addCart(productId, size, newAmount)
+    this.props.addCart(productId, size, newAmount, true)
       .then(res => {
         if (res.status === 'ok') {
           this.props.fetchCart(res.data.id);

@@ -264,7 +264,7 @@ class App extends Component {
     localStorage.favorite = JSON.stringify(changedFavorite);
   }
 
-  addCart(id, size, amount) {
+  addCart(id, size, amount, isOrder = false) {
     if (id === 'undefined' || size === 'undefined' || amount === 'undefined')
       return console.log(`Не указан один из обязательный параметров. id:${id}, size:${size}, amount:${amount}`);
     if (localStorage.cart && localStorage.cart !== 'undefined') {
@@ -274,7 +274,8 @@ class App extends Component {
         cart => {
           if (cart.status === "ok"){
             const curProduct = cart.data.products.filter(product => product.id === id && product.size === size)[0];
-            //console.log(curProduct, curProduct && amount !== 0 ? (curProduct.size === size ? curProduct.amount + amount : amount) : amount)
+            if (isOrder)
+              curProduct.amount = 0;
             return fetch(`https://api-neto.herokuapp.com/bosa-noga/cart/${localStorage.cart}`,{
               method: 'POST',
               mode: 'cors',
