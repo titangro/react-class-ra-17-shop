@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { createBrowserHistory, createHashHistory } from 'history';
+
+import './css/normalize.css';
+import './css/font-awesome.min.css';
+import './css/style.css';
+
 import Header from './Header';
 import Homepage from './Homepage';
 import Footer from './Footer';
@@ -9,9 +14,6 @@ import Order from './Order';
 import ProductCard from './ProductCard';
 import Favorite from './Favorite';
 import Preloader from './Preloader';
-import './css/normalize.css';
-import './css/font-awesome.min.css';
-import './css/style.css';
 
 class App extends Component {
   _isMounted = false;

@@ -4,7 +4,7 @@ import Breadcrumbs from './Breadcrumbs';
 import OrderProgress from './OrderProgress';
 import OrderDone from './OrderDone';
 import { withRouter } from "react-router-dom";
-import './css/style-order.css';
+//import './css/style-order.css';
 
 class Order extends Component {
   _isMounted = false;
@@ -19,6 +19,10 @@ class Order extends Component {
       isActiveForm: false,
       sumOrder: 0,
     }
+  }
+
+  componentDidMount() {
+    require('./css/style-order.css');
   }
   
   componentWillMount() {

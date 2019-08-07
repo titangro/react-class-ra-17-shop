@@ -5,7 +5,7 @@ import favoriteImage from './img/product-card-pics/product-card__favorite-fill.p
 import Viewed from './Viewed';
 import Similar from './Similar';
 import PropTypes from 'prop-types';
-import './css/style-product-card.css';
+//import './css/style-product-card.css';
 //import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 class ProductCard extends Component {
@@ -21,6 +21,11 @@ class ProductCard extends Component {
       quantity: 1,
       error: null,
     }
+  }
+
+  componentDidMount() {
+    require('./css/style-order.css');
+    require('./css/style-product-card.css');
   }
 
   componentWillMount() {

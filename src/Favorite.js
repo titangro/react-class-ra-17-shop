@@ -4,7 +4,7 @@ import Products from './Products';
 import Sorting from './Sorting';
 import Pagination from './Pagination';
 import PropTypes from 'prop-types';
-import './css/style-favorite.css';
+//import './css/style-favorite.css';
 //import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 class Favorite extends Component {
@@ -17,6 +17,12 @@ class Favorite extends Component {
       favorite: localStorage.favorite ? JSON.parse(localStorage.favorite) : [],
       products: null
     }
+  }
+
+  componentDidMount() {
+    require('./css/style-order.css');
+    require('./css/style-catalogue.css');
+    require('./css/style-favorite.css');
   }
   
   componentWillMount() {

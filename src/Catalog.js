@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import Breadcrumbs from './Breadcrumbs';
 import Products from './Products';
 import Sorting from './Sorting';
@@ -7,7 +6,7 @@ import Pagination from './Pagination';
 import Viewed from './Viewed';
 import Sidebar from './Sidebar';
 import PropTypes from 'prop-types';
-import './css/style-catalogue.css';
+//import './css/style-catalogue.css';
 //import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 class Catalog extends Component {
@@ -25,6 +24,8 @@ class Catalog extends Component {
   }
 
   componentDidMount() {
+    require('./css/style-catalogue.css');
+
     this.changeCatalogHeight();
   }
 
