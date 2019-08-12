@@ -1145,3 +1145,13 @@ width: 7px;
 ::-webkit-scrollbar{
 width: 7px;
 }
+
+.product-catalogue {
+	width: 100%;
+}
+.sidebar {
+	margin-left: 0;
+}
+.product-catalogue-content {
+	margin-right: 0;
+}

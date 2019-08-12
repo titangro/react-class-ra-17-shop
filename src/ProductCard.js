@@ -5,10 +5,11 @@ import favoriteImage from './img/product-card-pics/product-card__favorite-fill.p
 import Viewed from './Viewed';
 import Similar from './Similar';
 import PropTypes from 'prop-types';
-//import './css/style-product-card.css';
-//import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 
 class ProductCard extends Component {
+  _updated = false;
+
   constructor(props) {
     super(props);
 
@@ -21,6 +22,7 @@ class ProductCard extends Component {
       quantity: 1,
       error: null,
     }
+    this.fetchProduct.bind(this);
   }
 
   componentDidMount() {
@@ -34,7 +36,8 @@ class ProductCard extends Component {
 
   /* загрузка товара по id из адресной строки */
   fetchProduct(id = null) {
-    const productId = id ? id : window.location.pathname.slice(window.location.pathname.lastIndexOf('/') + 1);    
+    const productId = id ? id : window.location.pathname.slice(window.location.pathname.lastIndexOf('/') + 1);
+    setTimeout(() => this._updated = false, 100);
     this.props.fetchSingleProduct(productId)
       .then(({data}) => this.setState({
         product: data,
@@ -47,6 +50,10 @@ class ProductCard extends Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
+    if (this.state.product && nextProps.match.params.id !== this.state.product.id && !this._updated) {
+      this._updated = true;
+      this.fetchProduct(+nextProps.match.params.id)
+    }
     if (this.state.product && nextState.product.id !== this.state.product.id) {
       this.props.addViewed(nextState.product.id);
       this.setState({
@@ -59,7 +66,9 @@ class ProductCard extends Component {
   }
 
   componentWillUnmount() {
-    this.props.addViewed(this.state.product.id);
+    if (this.state.product) 
+      this.props.addViewed(this.state.product.id);
+    this._updated = true;
   }
 
   /* изменение количества */
@@ -273,4 +282,4 @@ ProductCard.propTypes = {
   addCart: PropTypes.func.isRequired
 }
 
-export default ProductCard;
+export default withRouter(ProductCard);

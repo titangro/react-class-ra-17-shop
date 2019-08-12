@@ -707,3 +707,7 @@ width: 7px;
 ::-webkit-scrollbar{
 width: 7px;
 }
+
+.product-card {
+  width: 100%;
+}

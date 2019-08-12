@@ -450,6 +450,8 @@ class App extends Component {
     });
     const FavoriteWithWrapper = this.withWrapper(Favorite);
     const OrderWithWrapper = this.withWrapper(Order, 'order-wrapper');
+    const CatalogWithWrapper = this.withWrapper(Catalog);
+    const ProductCardWithWrapper = this.withWrapper(ProductCard);
     return (
       <BrowserRouter basename={process.env.PUBLIC_URL} history={history}>
         <div className="container" >
@@ -460,13 +462,13 @@ class App extends Component {
               <Homepage {...this.state} handleFavorite={this.handleFavorite} />
             </Route>
             {!this.state.isLoading ? <Route path="/catalog" history={history}>
-              <Catalog {...this.state} history={history} getSearchParam={this.getSearchParam} handleFilter={this.handleFilter.bind(this)} handleFavorite={this.handleFavorite} fetchProductsByParams={this.fetchProductsByParams.bind(this)} fetchSizes={this.fetchSizes.bind(this)} showFilter={this.showFilter.bind(this)} />
+              <CatalogWithWrapper {...this.state} history={history} getSearchParam={this.getSearchParam} handleFilter={this.handleFilter.bind(this)} handleFavorite={this.handleFavorite} fetchProductsByParams={this.fetchProductsByParams.bind(this)} fetchSizes={this.fetchSizes.bind(this)} showFilter={this.showFilter.bind(this)} />
             </Route> : ''}
             <Route path="/order">
               <OrderWithWrapper {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} addCart={this.addCart.bind(this)} fetchCart={this.fetchCart.bind(this)} fetchOrder={this.fetchOrder.bind(this)} history={history} />
             </Route>
             <Route path="/product_card/:id">
-              <ProductCard {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} addCart={this.addCart.bind(this)} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFilter={this.handleFilter.bind(this)} handleFavorite={this.handleFavorite} addViewed={this.addViewed} fetchCart={this.fetchCart.bind(this)} />
+              <ProductCardWithWrapper {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} addCart={this.addCart.bind(this)} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFilter={this.handleFilter.bind(this)} handleFavorite={this.handleFavorite} addViewed={this.addViewed} fetchCart={this.fetchCart.bind(this)} />
             </Route>
             {!this.state.isLoading ? <Route path="/favorite" history={history}>
               <FavoriteWithWrapper {...this.state} history={history} fetchSingleProduct={this.fetchSingleProduct.bind(this)} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFavorite={this.handleFavorite} fetchSizes={this.fetchSizes.bind(this)} handleFilter={this.handleFilter.bind(this)} getSearchParam={this.getSearchParam} showFilter={this.showFilter.bind(this)} />
