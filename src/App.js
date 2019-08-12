@@ -469,7 +469,7 @@ class App extends Component {
               <ProductCard {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} addCart={this.addCart.bind(this)} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFilter={this.handleFilter.bind(this)} handleFavorite={this.handleFavorite} addViewed={this.addViewed} fetchCart={this.fetchCart.bind(this)} />
             </Route>
             {!this.state.isLoading ? <Route path="/favorite" history={history}>
-              <FavoriteWithWrapper {...this.state} history={history} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFavorite={this.handleFavorite} fetchSizes={this.fetchSizes.bind(this)} handleFilter={this.handleFilter.bind(this)} getSearchParam={this.getSearchParam} showFilter={this.showFilter.bind(this)} />
+              <FavoriteWithWrapper {...this.state} history={history} fetchSingleProduct={this.fetchSingleProduct.bind(this)} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFavorite={this.handleFavorite} fetchSizes={this.fetchSizes.bind(this)} handleFilter={this.handleFilter.bind(this)} getSearchParam={this.getSearchParam} showFilter={this.showFilter.bind(this)} />
             </Route> : ''}
           </Switch>
           <Footer />

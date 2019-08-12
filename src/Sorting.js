@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Sorting = ({ handleFilter, getSearchParam, showFilter, history }) => {
     const handleSort = (sortValue) => {
         const filter = showFilter(['sortBy'], [sortValue]);
-        history.push('/catalog' + filter);
+        history.push(window.location.pathname.slice(window.location.pathname.lastIndexOf('/')) + filter);
         handleFilter(filter);
     }
 

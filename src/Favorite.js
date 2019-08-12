@@ -28,30 +28,39 @@ class Favorite extends Component {
   componentWillMount() {
     this._isMounted = true;
     
-    this.props.fetchProductsByParams([{key:'id', params: this.state.favorite}])
-      .then(res => {
-        if (this._isMounted) {
-          this.setState({products: res})
-        }
-      })
+    this.fetchFavoriteProducts(this.state.favorite)
   }
 
   componentWillUpdate() {
     const newFavorite = localStorage.favorite ? JSON.parse(localStorage.favorite) : [];
     if (this.state.favorite.length !== newFavorite.length) {
-      this.props.fetchProductsByParams([{key:'id', params: newFavorite}])
-      .then(res => {
-        this.setState({products: res})
-      })
+      this.fetchFavoriteProducts(newFavorite)
     }
-  }
-
-  fetchFavoriteProducts() {
-    
   }
 
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  fetchFavoriteProducts(favoriteIds) {
+    const page = this.props.getSearchParam('page') ? this.props.getSearchParam('page') : 1;
+    const sortBy = this.props.getSearchParam('sortBy') ? this.props.getSearchParam('sortBy') : 'price';
+    Promise.all(favoriteIds.map(
+      productId =>
+      this.props.fetchSingleProduct(productId)
+    ))
+      .then(res => res.map(item => item.data))
+      .then(res => {
+        this.setState({
+          products: {
+            status: 'ok',
+            data: res.sort((a, b) => a[sortBy] - b[sortBy]).slice((page - 1) * 12, page * 12),
+            goods: res.length,
+            page: +page,
+            pages: Math.ceil(res.length / 12)
+          }
+        })
+      })
   }
 
   render() {

@@ -56,11 +56,6 @@ class Header extends Component {
         }
     }
 
-    componentWillUpdate(nextProps, nextState) {
-        if (nextState.search === this.state.search && nextProps.history.action === "PUSH" && (this.state.activeCategory || this.state.activeSearch || this.state.activeProfile || this.state.activeCart ))
-            this.shutDownCart();
-    }
-
     render() {
         const topMenuLinks = [{name:'Возврат', link:'#'}, {name:'Доставка и оплата', link:'#'}, {name:'О магазине', link:'#'}, {name:'Контакты', link:'#'}, {name:'Новости', link:'#'}],
             contacts = {
