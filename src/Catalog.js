@@ -56,8 +56,8 @@ class Catalog extends Component {
     this._isMounted = false;
   }
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps !== this.props;
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps !== this.props || nextState !== this.state;
   }
 
   componentWillReceiveProps(nextProps) {
