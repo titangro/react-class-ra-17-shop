@@ -95,28 +95,24 @@ class App extends Component {
   }
 
   fetchProducts() {
-    this.setState({isLoading: true});
     let products = [], errors = [];
-    //console.log(this.state.activeFilter);
     this.getFetch(`https://api-neto.herokuapp.com/bosa-noga/products${this.state.activeFilter ? this.state.activeFilter : ''}`,
       (data) => products = data,
       (error) => errors[errors.length] = error
     )
     .then(() => {
       if (products.status === "ok") {
-        //console.log(22);
-        this.setState({products: products, isLoading: false});
+        this.setState({products: products});
       }
       if (errors.length) {
-        //console.log(23);
-        this.setState({isLoading: false, errors: [...this.state.errors, ...errors] });
+        this.setState({errors: [...this.state.errors, ...errors] });
       }
     })
   }
 
   fetchActiveSubcategories(categoryId) {
     const categories = this.state.categories;    
-    this.setState({isLoading: true});
+    //this.setState({isLoading: true});
     let reasons = [], types = [], seasons = [], brands = [];    
     return Promise.all(
       this.state.filters.reason.map(
@@ -149,7 +145,7 @@ class App extends Component {
       ) .then (
         () => {
         //console.log(reasons, types, seasons, brands);
-        this.setState({isLoading: false});
+        //this.setState({isLoading: false});
         return categories.length ? [
             {sort: 'reason', name: 'Повод', cls: reasons.length > 13 ? 'dropped-menu__lists_three-coloumns' : '', children: reasons},
             {sort: 'type', name: 'Категории', cls: types.length > 13 ? 'dropped-menu__lists_three-coloumns' : '', children: types},
@@ -383,8 +379,10 @@ class App extends Component {
       : !withoutFilters ? this.getSearchParam('keys').filter(item => item !== 'page' && item !== 'sortBy')
       : this.getSearchParam('keys').filter(item => item === 'categoryId' || item === 'search');
     searchKeys = [...searchKeys.slice(searchKeys.indexOf("search"), searchKeys.indexOf("search") + 1),...searchKeys.filter(item => item !== 'search')];
-    //console.log(searchParams, params)
-    if (params.length) {      
+    if (searchKeys.indexOf("search") !== -1) {
+      searchKeys = searchKeys.filter(item => item !== "categoryId")
+    }
+    if (params.length) {
       let index = 0;
       for (const paramKey of paramKeys) {   
         if (paramKey === 'size[]' || paramKey === 'heelSize[]') {
@@ -452,16 +450,16 @@ class App extends Component {
     const OrderWithWrapper = this.withWrapper(Order, 'order-wrapper');
     const CatalogWithWrapper = this.withWrapper(Catalog);
     const ProductCardWithWrapper = this.withWrapper(ProductCard);
-    return !this.state.isLoading ? (
+    return (
       <BrowserRouter basename={process.env.PUBLIC_URL} history={history}>
         <div className="container" >
           <Preloader hidden={!this.state.isLoading} />
           <Header {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} handleFilter={this.handleFilter.bind(this)} fetchActiveSubcategories={this.fetchActiveSubcategories.bind(this)} showFilter={this.showFilter.bind(this)} history={history} getSearchParam={this.getSearchParam.bind(this)} deleteGoodFromCart={this.deleteGoodFromCart.bind(this)} />                         
-          <Switch>
+          {!this.state.isLoading ? (<Switch>
             <Route exact path="/">
               <Homepage {...this.state} handleFavorite={this.handleFavorite} />
             </Route>
-            {!this.state.isLoading ? <Route path="/catalog" history={history}>
+            <Route path="/catalog" history={history}>
               <CatalogWithWrapper {...this.state} history={history} getSearchParam={this.getSearchParam} handleFilter={this.handleFilter.bind(this)} handleFavorite={this.handleFavorite} fetchProductsByParams={this.fetchProductsByParams.bind(this)} fetchSizes={this.fetchSizes.bind(this)} showFilter={this.showFilter.bind(this)} />
             </Route> : ''}
             <Route path="/order">
@@ -470,16 +468,14 @@ class App extends Component {
             <Route path="/product_card/:id">
               <ProductCardWithWrapper {...this.state} fetchSingleProduct={this.fetchSingleProduct.bind(this)} addCart={this.addCart.bind(this)} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFilter={this.handleFilter.bind(this)} handleFavorite={this.handleFavorite} addViewed={this.addViewed} fetchCart={this.fetchCart.bind(this)} />
             </Route>
-            {!this.state.isLoading ? <Route path="/favorite" history={history}>
+            <Route path="/favorite" history={history}>
               <FavoriteWithWrapper {...this.state} history={history} fetchSingleProduct={this.fetchSingleProduct.bind(this)} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFavorite={this.handleFavorite} fetchSizes={this.fetchSizes.bind(this)} handleFilter={this.handleFilter.bind(this)} getSearchParam={this.getSearchParam} showFilter={this.showFilter.bind(this)} />
             </Route> : ''}
-          </Switch>
+          </Switch>) : ''}
           <Footer />
         </div>
       </BrowserRouter>
-    ) : <div className="container" >
-          <Preloader hidden={!this.state.isLoading} />
-        </div> ;
+    );
   }
 }
 

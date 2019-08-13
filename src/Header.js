@@ -4,6 +4,7 @@ import logoImg from './img/header-logo.png';
 import Cart from './Cart';
 import PropTypes from 'prop-types';
 import { withRouter } from "react-router-dom";
+import { relative } from 'path';
 
 class Header extends Component {
     constructor(props) {
@@ -16,6 +17,7 @@ class Header extends Component {
             activeCart: false,
             subcategories: [],
             search: this.props.getSearchParam('search') ? decodeURIComponent(this.props.getSearchParam('search')) : '',
+            isLoading: false
         }
     }
 
@@ -23,9 +25,9 @@ class Header extends Component {
         if (this.state.activeCategory === categoryId) 
             this.setState({activeCategory: null});
         else {
-            this.setState({activeCategory: categoryId});
+            this.setState({activeCategory: categoryId, isLoading: true});
             this.props.fetchActiveSubcategories(categoryId)
-                .then(res => this.setState({subcategories: res}))
+                .then(res => this.setState({subcategories: res, isLoading: false}))
         }
     }
 
@@ -49,9 +51,9 @@ class Header extends Component {
     submitSearch(event) {
         event.preventDefault();
         if (this.state.search !== '') {
-            const filter = this.props.showFilter(['search'], [this.state.search], true);
-            this.props.handleFilter(filter);
-            this.props.history.push('/catalog' + filter);
+            const filter = '/catalog?search=' + this.state.search;
+            this.props.handleFilter('?search=' + this.state.search);
+            this.props.history.push(filter);
             this.shutDownCart();
         }
     }
@@ -138,29 +140,36 @@ class Header extends Component {
                         <ul className="main-menu__items">
                             {categories.map(
                                 ({id, title}) => 
-                                <li key={id} className={`main-menu__item ${this.state.activeCategory === id ? 'main-menu__item_active' : ''}`} onClick={() => this.setActiveCategory(id)} >
-                                    <a href="#">{title}</a>
+                                <li key={id} className={`main-menu__item ${this.state.activeCategory === id ? 'main-menu__item_active' : ''}`} >
+                                    <a href="" onClick={(event) => {
+                                        event.preventDefault();
+                                        this.setActiveCategory(id)
+                                    }}>{title}</a>
                                 </li>
                             )}
                         </ul>
                     </div>    
                 </nav>
                 <div className={`dropped-menu ${this.state.activeCategory ? 'dropped-menu_visible' : ''}`}>
-                    <div className="wrapper">
-                        {this.state.subcategories.map(
-                            ({sort, name, cls, children}, index) =>
-                            <div className={`dropped-menu__lists${cls? ' ' + cls : ''}`} key={index} >
-                                <h3 className="dropped-menu__list-title">{name}:</h3>
-                                <ul className="dropped-menu__list">
-                                    {children.map(
-                                        (item, index) =>
-                                        <li className="dropped-menu__item" key={index} >
-                                            <Link to={`/catalog?categoryId=${this.state.activeCategory}&${sort}=${item}`} onClick={() => this.props.handleFilter(`?categoryId=${this.state.activeCategory}&${sort}=${item}`)} >{decodeURIComponent(item)}</Link>
-                                        </li>
-                                    )}
-                                </ul>
-                            </div>
-                        )}                    
+                    <div className="wrapper" style={{position: 'relative'}}>
+                        {this.state.isLoading ? 
+                            <div className="preloader"><hr/><hr/><hr/><hr/></div>
+                        : (<React.Fragment>
+                            {this.state.subcategories.map(
+                                ({sort, name, cls, children}, index) =>
+                                <div className={`dropped-menu__lists${cls? ' ' + cls : ''}`} key={index} >
+                                    <h3 className="dropped-menu__list-title">{name}:</h3>
+                                    <ul className="dropped-menu__list">
+                                        {children.map(
+                                            (item, index) =>
+                                            <li className="dropped-menu__item" key={index} >
+                                                <Link to={`/catalog?categoryId=${this.state.activeCategory}&${sort}=${item}`} onClick={() => this.props.handleFilter(`?categoryId=${this.state.activeCategory}&${sort}=${item}`)} >{decodeURIComponent(item)}</Link>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
+                        </React.Fragment>)}           
                     </div>
                 </div>
             </header>

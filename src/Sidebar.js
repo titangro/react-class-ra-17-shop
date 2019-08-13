@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import PriceSlider from './PriceSlider';
 import BrandFilter from './BrandFilter';
 
-const Sidebar = ({filters, productsWithoutFilters, activeFilter, handleFilter, getSearchParam, showFilter, history, changeCatalogHeight, categories}) => {  
+const Sidebar = ({filters, productsWithoutFilters, activeFilter, handleFilter, getSearchParam, showFilter, history, changeCatalogHeight}) => {  
     
     /* Открытие/закрытие фильтра */
     const toggleOpener = (node) => {
