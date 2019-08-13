@@ -33,8 +33,7 @@ class PriceSlider extends Component {
 
     componentWillUnmount() {      
         this.updatePriceFilter.cancel();
-        this.changeInputFromMouse.cancel();        
-        //console.log(this.state)
+        this.changeInputFromMouse.cancel();    
     }
 
     updatePriceFilter = debounce((nextState) => {

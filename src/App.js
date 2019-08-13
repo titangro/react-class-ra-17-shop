@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { createBrowserHistory, createHashHistory } from 'history';
+import { createBrowserHistory } from 'history';
 
 import './css/normalize.css';
 import './css/font-awesome.min.css';
@@ -452,7 +452,7 @@ class App extends Component {
     const OrderWithWrapper = this.withWrapper(Order, 'order-wrapper');
     const CatalogWithWrapper = this.withWrapper(Catalog);
     const ProductCardWithWrapper = this.withWrapper(ProductCard);
-    return (
+    return !this.state.isLoading ? (
       <BrowserRouter basename={process.env.PUBLIC_URL} history={history}>
         <div className="container" >
           <Preloader hidden={!this.state.isLoading} />
@@ -477,7 +477,9 @@ class App extends Component {
           <Footer />
         </div>
       </BrowserRouter>
-    );
+    ) : <div className="container" >
+          <Preloader hidden={!this.state.isLoading} />
+        </div> ;
   }
 }
 

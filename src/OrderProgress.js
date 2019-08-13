@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const OrderProrgess = ({validateForm, sumOrder, handleQuantity, cart, products, error, isActiveForm, sendForm}) => {    
+const OrderProrgess = ({validateForm, sumOrder, handleQuantity, cart, error, isActiveForm, sendForm}) => {    
     
     /* Убираем недопустимые символы для ввода, валидация формы при наборе для активации кнопки подтверждения заказа */
     const checkName = (node) => {
@@ -31,43 +31,39 @@ const OrderProrgess = ({validateForm, sumOrder, handleQuantity, cart, products, 
             <div className="order-basket__title">в вашей корзине:</div>
             <div className="order-basket__item-list">
                 {cart.map(
-                    product => {
-                        const good = products.filter(item => item.id === product.id)[0];
-                        return (
-                            <div className="basket-item" key={product.id + '_' + product.size}>
-                            <Link to={`/product_card/${product.id}`}>
-                                <div className="basket-item__pic" style={{
-                                backgroundImage: `url(${good.images[0]})`,
-                                backgroundRepeat: 'no-repeat',
-                                backgroundSize: 'contain',
-                                backgroundPosition: 'center'
-                                }}>
-                                </div>
-                            </Link>
-                            <div className="basket-item__product">
-                                <div className="basket-item__product-name">
-                                <Link to={`/product_card/${product.id}`}>{good.title}</Link>
-                                </div>
-                                <div className="basket-item__product-features">
-                                <div className="basket-item__size">Размер: <span>{product.size}</span></div>
-                                <div className="basket-item__producer">Производитель: <span>{good.brand}</span></div>
-                                <div className="basket-item__color">Цвет: <span>{good.color}</span></div>
-                                </div>
-                            </div>
-                            <div className="basket-item__quantity">
-                                <div className="basket-item__quantity-change basket-item-list__quantity-change_minus" 
-                                onClick={() => handleQuantity(product.id, product.size, product.amount - 1)}>-</div>
-                                {product.amount}
-                                <div className="basket-item__quantity-change basket-item-list__quantity-change_plus" 
-                                onClick={() => handleQuantity(product.id, product.size, product.amount + 1)}>+</div>
-                            </div>
-                            <div className="basket-item__price">
-                                {(product.amount * good.price).toLocaleString('RU-ru')}
-                                <i className="fa fa-rub" aria-hidden="true"></i>
-                            </div>
-                            </div>
-                        )
-                    }
+                  product => 
+                    <div className="basket-item" key={product.id + '_' + product.size}>
+                      <Link to={`/product_card/${product.id}`}>
+                          <div className="basket-item__pic" style={{
+                          backgroundImage: `url(${product.images[0]})`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundSize: 'contain',
+                          backgroundPosition: 'center'
+                          }}>
+                          </div>
+                      </Link>
+                      <div className="basket-item__product">
+                          <div className="basket-item__product-name">
+                          <Link to={`/product_card/${product.id}`}>{product.title}</Link>
+                          </div>
+                          <div className="basket-item__product-features">
+                          <div className="basket-item__size">Размер: <span>{product.size}</span></div>
+                          <div className="basket-item__producer">Производитель: <span>{product.brand}</span></div>
+                          <div className="basket-item__color">Цвет: <span>{product.color}</span></div>
+                          </div>
+                      </div>
+                      <div className="basket-item__quantity">
+                          <div className="basket-item__quantity-change basket-item-list__quantity-change_minus" 
+                          onClick={() => handleQuantity(product.id, product.size, product.amount - 1)}>-</div>
+                          {product.amount}
+                          <div className="basket-item__quantity-change basket-item-list__quantity-change_plus" 
+                          onClick={() => handleQuantity(product.id, product.size, product.amount + 1)}>+</div>
+                      </div>
+                      <div className="basket-item__price">
+                          {(product.amount * product.price).toLocaleString('RU-ru')}
+                          <i className="fa fa-rub" aria-hidden="true"></i>
+                      </div>
+                    </div>
                 )}
             </div>
             <div className="order-basket__summ">
@@ -132,9 +128,6 @@ OrderProrgess.propTypes = {
     sumOrder: PropTypes.number.isRequired,
     handleQuantity: PropTypes.func.isRequired,
     cart: PropTypes.arrayOf(
-        PropTypes.object.isRequired
-    ).isRequired,
-    products: PropTypes.arrayOf(
         PropTypes.object.isRequired
     ).isRequired,
     error: PropTypes.string.isRequired,

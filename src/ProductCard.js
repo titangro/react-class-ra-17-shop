@@ -9,6 +9,7 @@ import { withRouter } from "react-router-dom";
 
 class ProductCard extends Component {
   _updated = false;
+  _isMounted = false;
 
   constructor(props) {
     super(props);
@@ -31,7 +32,10 @@ class ProductCard extends Component {
   }
 
   componentWillMount() {
-    this.fetchProduct();
+    if (!this._isMounted) {
+      this._isMounted = true;
+      this.fetchProduct();
+    }
   }
 
   /* загрузка товара по id из адресной строки */
@@ -50,7 +54,7 @@ class ProductCard extends Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    if (this.state.product && nextProps.match.params.id !== this.state.product.id && !this._updated) {
+    if (this.state.product && +nextProps.match.params.id !== this.state.product.id && !this._updated) {
       this._updated = true;
       this.fetchProduct(+nextProps.match.params.id)
     }
@@ -69,6 +73,7 @@ class ProductCard extends Component {
     if (this.state.product) 
       this.props.addViewed(this.state.product.id);
     this._updated = true;
+    this._isMounted = true;
   }
 
   /* изменение количества */

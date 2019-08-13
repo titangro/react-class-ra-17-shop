@@ -6,8 +6,6 @@ import Pagination from './Pagination';
 import Viewed from './Viewed';
 import Sidebar from './Sidebar';
 import PropTypes from 'prop-types';
-//import './css/style-catalogue.css';
-//import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 class Catalog extends Component {
   _isMounted = false;

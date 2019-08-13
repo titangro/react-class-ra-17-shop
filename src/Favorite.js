@@ -4,8 +4,6 @@ import Products from './Products';
 import Sorting from './Sorting';
 import Pagination from './Pagination';
 import PropTypes from 'prop-types';
-//import './css/style-favorite.css';
-//import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 class Favorite extends Component {
   _isMounted = false;

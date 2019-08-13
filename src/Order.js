@@ -4,7 +4,7 @@ import Breadcrumbs from './Breadcrumbs';
 import OrderProgress from './OrderProgress';
 import OrderDone from './OrderDone';
 import { withRouter } from "react-router-dom";
-//import './css/style-order.css';
+//import { debounce } from "lodash";
 
 class Order extends Component {
   _isMounted = false;
@@ -17,8 +17,10 @@ class Order extends Component {
       cart: [],
       error: '',
       isActiveForm: false,
-      sumOrder: 0,
+      sumOrder: 0
     }
+    this.timeoutId = null;
+    this.product = null;
   }
 
   componentDidMount() {
@@ -36,7 +38,7 @@ class Order extends Component {
     }
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  componentWillUpdate(nextProps) {
     if (nextProps.cart.length && this.props.cart.reduce((sum,{amount}) => sum + amount,0) !== nextProps.cart.reduce((sum,{amount}) => sum + amount,0))
       this.updateCartProducts(nextProps);
 
@@ -47,6 +49,7 @@ class Order extends Component {
   
   componentWillUnmount() {
     this._isMounted = false;
+    clearTimeout(this.timeoutId);
   }
 
   updateCartProducts(props) {
@@ -119,14 +122,44 @@ class Order extends Component {
   handleQuantity(productId, size, newAmount) {
     if (newAmount === 0)
       return false;
-    this.props.addCart(productId, size, newAmount, true)
+    /*this.props.addCart(productId, size, newAmount, true)
       .then(res => {
         if (res.status === 'ok') {
           this.props.fetchCart(res.data.id);
         } else {
           this.setState({error: res.message})
         }
-      })
+      })*/
+
+    this.setState({
+      cart: [...this.state.cart.map(
+        item => {
+          if (item.id === productId && item.size === size)
+            this.product = {
+              id: item.id,
+              size: item.size,
+              amount: item.amount = item.id === productId && item.size === size ? newAmount : item.amount
+            };
+          return {
+            amount: item.amount = item.id === productId && item.size === size ? newAmount : item.amount,
+            id: item.id,
+            size: item.size
+          }
+        }
+      )]
+    })
+    
+    clearTimeout(this.timeoutId);
+    this.timeoutId = setTimeout(
+      () => this.props.addCart(this.product.id, this.product.size, this.product.amount, true)
+      .then(res => {
+        if (res.status === 'ok') {
+          clearTimeout(this.timeoutId);
+          this.props.fetchCart(res.data.id);
+        } else {
+          this.setState({error: res.message})
+        }
+      }), 500)
   } 
 
   render() {
@@ -134,7 +167,7 @@ class Order extends Component {
       <React.Fragment>
         <Breadcrumbs {...this.props} categoryName={'Оформление заказа'} />
         {!this.props.order ?
-          <OrderProgress {...this.state} validateForm={this.validateForm.bind(this)} handleQuantity={this.handleQuantity.bind(this)} sendForm={this.sendForm.bind(this)} />
+          <OrderProgress sumOrder={this.state.sumOrder} error={this.state.error} isActiveForm={this.state.isActiveForm} cart={this.state.products.map((product, index) => Object.assign({}, product, this.state.cart[index]))} validateForm={this.validateForm.bind(this)} handleQuantity={this.handleQuantity.bind(this)} sendForm={this.sendForm.bind(this)} />
           : <OrderDone order={this.props.order.data.info} email={this.props.order.email} sumOrder={this.props.order.sumOrder} history={this.props.history} />
         }        
       </React.Fragment>
