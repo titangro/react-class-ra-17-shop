@@ -7,9 +7,8 @@ class PriceSlider extends Component {
         super(props);
 
         this.state = {
-            minPrice: this.props.getSearchParam('minPrice') ? +this.props.getSearchParam('minPrice') : 0,
-            maxPrice: this.props.getSearchParam('maxPrice') && +this.props.getSearchParam('maxPrice') <= (this.props.productsWithoutFilters[0] ? this.props.productsWithoutFilters[0].price : 0) ? +this.props.getSearchParam('maxPrice') 
-                : this.props.productsWithoutFilters.length ? Math.ceil(this.props.productsWithoutFilters[0].price / 100) * 100 : 0,
+            minPrice: this.props.getSearchParam('minPrice') ? (+this.props.getSearchParam('minPrice') < this.solveMaxPrice() ? +this.props.getSearchParam('minPrice'): this.solveMaxPrice()) : 0,
+            maxPrice: this.solveMaxPrice(),
             max: this.props.productsWithoutFilters.length ? this.props.productsWithoutFilters[0].price : 0,
             activeCircle: false,
             circlePos: null
@@ -25,11 +24,16 @@ class PriceSlider extends Component {
         this.deactivateSlider.bind(this);
     }
 
+    solveMaxPrice() {
+        return this.props.getSearchParam('maxPrice') && +this.props.getSearchParam('maxPrice') <= (this.props.productsWithoutFilters[0] ? this.props.productsWithoutFilters[0].price : 0) ? +this.props.getSearchParam('maxPrice') 
+        : this.props.productsWithoutFilters.length ? Math.ceil(this.props.productsWithoutFilters[0].price / 100) * 100 : 0
+    }
+
     componentWillUpdate(nextProps, nextState) {
         if ((!this.state.activeCircle && (this.state.minPrice !== nextState.minPrice || this.state.maxPrice !== nextState.maxPrice)) || this.state.activeCircle && this.state.activeCircle !== nextState.activeCircle) {
             this.updatePriceFilter(nextState);
         }
-    }
+    }    
 
     componentWillUnmount() {      
         this.updatePriceFilter.cancel();
@@ -40,7 +44,7 @@ class PriceSlider extends Component {
         const filter = this.props.showFilter(['minPrice', 'maxPrice'], [nextState.minPrice, nextState.maxPrice], true);
         this.props.history.push(window.location.pathname + filter);
         this.props.handleFilter(filter);
-    }, 500)
+    }, 1000)
 
     /* Событие при изменение значения инпута */
     changeInput(node, val = null) {
@@ -64,10 +68,11 @@ class PriceSlider extends Component {
 
     /* Изменение слайдера цены относительно инпутов */
     movePriceSlider(side) {
+        //console.log(this.state)
         if (side === 'left')
-            return this.state.max ? Math.floor(215 / this.state.max * this.state.minPrice) : 0;
+            return this.state.max ? Math.round(215 / this.state.max * this.state.minPrice) : 0;
         else
-            return this.state.max ? Math.floor(215 / this.state.max * (this.state.max - this.state.maxPrice)) : 0;
+            return this.state.max ? Math.round(215 / this.state.max * (this.state.max - this.state.maxPrice)) : 0;
     }
 
     /* Изменение слайдера цены по движению мыши */
@@ -77,8 +82,8 @@ class PriceSlider extends Component {
             const node = isFirstCircle ? this.input1 : this.input2;
             const delta = event.nativeEvent.x - this.state.circlePos;
             const curValue = isFirstCircle ? this.state.minPrice : this.state.maxPrice;
-
-            this.changeInput(node, '' + (curValue + Math.round(delta * this.state.max / 240 / 4 / 100) * 100) );
+            //console.log(delta)
+            this.changeInput(node, '' + (curValue + Math.round(delta * this.state.max / 260 / 100) * 100) );
         }
     }, this.timeout)
 
@@ -92,12 +97,17 @@ class PriceSlider extends Component {
         this.setState({activeCircle: false});
     }
 
-    render() {        
+    /*shouldComponentUpdate(nextProps) {
+        return nextProps.productsWithoutFilters.length !== this.props.productsWithoutFilters.length;
+    }*/
+
+    render() {
+        //console.log(this.props)    
         const width = 240 - this.movePriceSlider('left') - this.movePriceSlider('right') - 25;
         return ( 
             <div className="price-slider"
                 onMouseUp={() => this.deactivateSlider()}
-                onMouseLeave={() => this.deactivateSlider()}>
+                >
                 <div className="circle-container">
                     <div className="circle-1" style={{left: `${this.movePriceSlider('left')}px`}}
                         onMouseDown={(event) => this.activateSlider(event)}

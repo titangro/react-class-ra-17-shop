@@ -17,7 +17,7 @@ class Catalog extends Component {
         categoryId: +this.props.getSearchParam('categoryId'),
         productsWithoutFilters: [],
         activeFilter: false,
-        minHeight: 0
+        minHeight: 1765
       }
   }
 
@@ -41,6 +41,7 @@ class Catalog extends Component {
         }
     }
     
+    this.setState({activeFilter: false});
     this.props.fetchProductsByParams(queryArray)
         .then(res => {
             if (this._isMounted) {
@@ -66,6 +67,7 @@ class Catalog extends Component {
   }
 
   render() {
+    //console.log(this.state)
     const curCategory = this.props.categories.filter(cat => cat.id === this.state.categoryId);
     let categoryName;
     if (this.props.getSearchParam('search')) {
