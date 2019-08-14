@@ -16,7 +16,7 @@ const Sidebar = ({filters, productsWithoutFilters, activeFilter, handleFilter, g
         } else {
             node.classList = ['opener-down'];
             if (contentNode)
-            contentNode.style.display = 'flex';
+                contentNode.style.display = 'flex';
         }
         changeCatalogHeight();
     }
@@ -79,32 +79,7 @@ const Sidebar = ({filters, productsWithoutFilters, activeFilter, handleFilter, g
                 <span className="checkbox-custom"></span>
                 <span className="label">{item}</span>
             </label>
-        </li>
-
-    /* Подкомпонент для стобцов размеров */
-    const FilterSize = ({filter}) => {
-        const multipleSize = filter === 'sizes' ? 'size[]' : 'heelSize[]';
-        return (
-            <ul>                                     
-                <div className="list-1">
-                    {filters[filter] ? filters[filter].map(
-                        (item, index) => {
-                            if (index % 2 === 0) 
-                                return <Label key={index} item={item} multipleSize={multipleSize} />  
-                        }
-                    ) : ''} 
-                </div>
-                <div className="list-2">
-                    {filters[filter] ? filters[filter].map(
-                        (item, index) => {
-                            if (index % 2 !== 0) 
-                                return <Label key={index} item={item} multipleSize={multipleSize}  />                                
-                        }
-                    ) : ''} 
-                </div>
-            </ul>
-        )
-    }
+        </li>    
     
     /* Вывод фильтров до бренда */
     const renderSentence = (filter, title, filters, index) => {
@@ -118,6 +93,7 @@ const Sidebar = ({filters, productsWithoutFilters, activeFilter, handleFilter, g
         else 
             cls = filter;
         const chosenFilter = decodeURIComponent(getSearchParam(filter));
+        const multipleSize = filter === 'sizes' ? 'size[]' : 'heelSize[]';
         return <React.Fragment key={index}>
             <section className="sidebar__division">
                 <div className={`sidebar__${cls}`}>
@@ -142,7 +118,24 @@ const Sidebar = ({filters, productsWithoutFilters, activeFilter, handleFilter, g
                         ) : ''}
                     </ul> : 
                     (filter === 'sizes' || filter === 'heelSize' ?
-                    <FilterSize filter={filter} />
+                        <ul>                                     
+                            <div className="list-1">
+                                {filters[filter] ? filters[filter].map(
+                                    (item, index) => {
+                                        if (index % 2 === 0) 
+                                            return <Label key={index} item={item} multipleSize={multipleSize} />  
+                                    }
+                                ) : ''} 
+                            </div>
+                            <div className="list-2">
+                                {filters[filter] ? filters[filter].map(
+                                    (item, index) => {
+                                        if (index % 2 !== 0) 
+                                            return <Label key={index} item={item} multipleSize={multipleSize}  />                                
+                                    }
+                                ) : ''} 
+                            </div>
+                        </ul>
                     : activeFilter && productsWithoutFilters ? <PriceSlider productsWithoutFilters={productsWithoutFilters} getSearchParam={getSearchParam} showFilter={showFilter} handleFilter={handleFilter} history={history} /> : <div className="price-slider">
                         <div className="circle-container">
                             <div className="circle-1" style={{left: 0}}></div>

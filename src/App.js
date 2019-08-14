@@ -471,7 +471,7 @@ class App extends Component {
             <Route path="/favorite" history={history}>
               <FavoriteWithWrapper {...this.state} history={history} fetchSingleProduct={this.fetchSingleProduct.bind(this)} fetchProductsByParams={this.fetchProductsByParams.bind(this)} handleFavorite={this.handleFavorite} fetchSizes={this.fetchSizes.bind(this)} handleFilter={this.handleFilter.bind(this)} getSearchParam={this.getSearchParam} showFilter={this.showFilter.bind(this)} />
             </Route> : ''}
-          </Switch>) : ''}
+          </Switch>) : <Homepage {...this.state} handleFavorite={this.handleFavorite} />}
           <Footer />
         </div>
       </BrowserRouter>
